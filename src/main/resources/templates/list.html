@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{commons/layout2}">
+
+<body>
+	<div layout:fragment="content">
+		<!-- Section-->
+		<section class="py-5">
+			<div class="container px-4 px-lg-5 mt-5">
+				<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th scope="col">コード</th>
+								<th scope="col">商品名</th>
+								<th scope="col">価格</th>
+								<th scope="col">画像</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="item : ${itemlist}">
+								<th th:text="${item.code}" class="thtest">コード</th>
+								<td th:text="${item.name}" class="tdtest">商品名</td>
+								<th th:text="${item.price}" class="tdtest">価格</th>
+								<td class="tdtest"><img th:src="@{/images/{image}.png (image=${item.image})}" width=120
+										height=96 alt="${item.image}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+
+</html>
