@@ -20,6 +20,5 @@ public class Cart implements Serializable{
 	private Integer code;
 	@Column(name = "count")
 	private Integer count;
-	
 }
 
