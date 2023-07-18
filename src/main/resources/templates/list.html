@@ -19,11 +19,12 @@
 						</thead>
 						<tbody>
 							<tr th:each="item : ${itemlist}">
-								<th th:text="${item.code}" class="thtest">コード</th>
+								<td th:text="${item.code}" class="thtest">コード</th>
 								<td th:text="${item.name}" class="tdtest">商品名</td>
-								<th th:text="${item.price}" class="tdtest">価格</th>
-								<td class="tdtest"><img th:src="@{/images/{image}.png (image=${item.image})}" width=120
-										height=96 alt="${item.image}"></td>
+								<td th:text="${item.price}" class="tdtest">価格</td>
+								<td class="tdtest"><img 
+											th:src="@{/images/{image}.png (image=${item.image})}" 
+								           			width=120 height=96 alt="${item.image}"></td>
 							</tr>
 						</tbody>
 					</table>

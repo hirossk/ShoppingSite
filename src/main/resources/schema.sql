@@ -12,12 +12,12 @@ CREATE MEMORY TABLE "PUBLIC"."ITEM"(
 ALTER TABLE "PUBLIC"."ITEM" ADD CONSTRAINT "PUBLIC"."CONSTRAINT_2" PRIMARY KEY("CODE");       
 -- 6 +/- SELECT COUNT(*) FROM PUBLIC.ITEM;    
 INSERT INTO "PUBLIC"."ITEM" VALUES
-(1, U&'\30ae\30bf\30fc', 30000, 'acoustic-guitar'),
-(2, U&'\30df\30c7\30a3\30ad\30fc\30dc\30fc\30c9', 48000, 'midi'),
-(3, U&'\30a8\30ec\30af\30c8\30fc\30f3', 300000, 'electone'),
-(4, U&'\30b5\30c3\30af\30b9', 400000, 'music_saxophone_illust'),
-(5, U&'\30c8\30e9\30f3\30da\30c3\30c8', 250000, 'music_trumpet_illust'),
-(6, U&'\30db\30eb\30f3', 500000, 'horn');
+(1, 'ギター', 30000, 'guitar'),
+(2, 'ミディキーボード', 48000, 'midi'),
+(3, 'エレクトーン', 300000, 'electone'),
+(4, 'サックス', 400000, 'sax'),
+(5, 'トランペット', 250000, 'trumpet'),
+(6, 'ホルン', 500000, 'horn');
 DROP TABLE IF EXISTS cart;               
 CREATE MEMORY TABLE "PUBLIC"."CART"(
     "CODE" INTEGER NOT NULL,
