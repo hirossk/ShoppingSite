@@ -29,5 +29,7 @@ public class Item implements Serializable{
 	private Integer price;
 	@Column(name = "image")
 	private String image;
+	
+	
 }
 
