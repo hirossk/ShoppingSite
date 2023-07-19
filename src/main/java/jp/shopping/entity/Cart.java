@@ -21,5 +21,6 @@ public class Cart implements Serializable{
 	@Column(name = "count")
 	private Integer count;
 	//空行追加
+	//コメント追加
 }
 
