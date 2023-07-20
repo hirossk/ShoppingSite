@@ -6,9 +6,9 @@ INSERT INTO "PUBLIC"."ITEM" VALUES
 (5, 'トランペット', 250000, 'trumpet'),
 (6, 'ホルン', 500000, 'horn');
    
-INSERT INTO "PUBLIC"."CART" VALUES
-(1, 1),
-(2, 1),
-(3, 1),
-(4, 4),
-(6, 2);               
+//INSERT INTO "PUBLIC"."CART" VALUES
+//(1, 1),
+//(2, 1),
+//(3, 1),
+//(4, 4),
+//(6, 2);               

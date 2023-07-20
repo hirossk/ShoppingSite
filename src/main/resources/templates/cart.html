@@ -17,20 +17,35 @@
 								<th scope="col">数量</th>
 								<th scope="col">金額</th>
 								<th scope="col">写真</th>
+								<th scope="col">編集</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="cart : ${cartlist}">
-								<th th:text="${cart.code}" class="thtest">コード</th>
+								<td th:text="${cart.code}" class="thtest">コード</td>
 								<td th:text="${cart.name}" class="tdtest">商品名</td>
-								<th th:text="${cart.price}" class="tdtest">価格</th>
-								<th th:text="${cart.count}" class="tdtest">数量</th>
-								<th th:text="${cart.count * cart.price}" class="tdtest">金額</th>
+								<td th:text="${cart.price}" class="tdtest">価格</td>
+								<td th:text="${cart.count}" class="tdtest">数量</td>
+								<td th:text="${cart.count * cart.price}" class="tdtest">金額</td>
 								<td class="tdtest"><img th:src="@{/images/{image}.png (image=${cart.image})}" width=120
 										height=96 alt="${cart.image}"></td>
+								<!-- カートから削除する機能 -->
+								<td class="text-center">
+									<!-- 削除ボタンは赤くする -->
+									<a class="btn" 
+									      th:href="@{/del/{code} (code=${cart.code})}">
+
+									</a>
+								</td>
 							</tr>
 						</tbody>
 					</table>
+				</div>
+				<div class="text-center">
+					<!-- ショップに戻る機能 -->
+					<a class="btn" th:href="@{/shop}">
+
+					</a>
 				</div>
 			</div>
 		</section>

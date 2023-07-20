@@ -16,13 +16,56 @@ import jp.shopping.repository.CartRepository;
 import jp.shopping.repository.ItemRepository;
 
 @Controller
-public class RequestParamController {
+public class ReqController {
+	//カートについか処理
+	@GetMapping("/cart/{code}")
+	public String cartIn(@PathVariable Integer code,Model model) {
+		//カートにデータを追加する処理
+		Cart cart;
+		//現在数初期値０個にする
+		int genzaisu = 0;
+		//cartに同じ商品があれば数を追加する
+		Optional<Cart> currentcart = cartrepo.findById(code);
+		
+		if(!currentcart.isEmpty()) {
+			//cartに同じ商品があれば数を追加する
+			//現在数を取り出す
+			genzaisu = currentcart.get().getCount();
+		}
+		
+		//カートに一つ追加する
+
+		
+		//カートにデータを保存
+
+		
+		//cartの内容を取得する
+		List<ItemCountDto> cartList = itemrepository.findItemInCart();
+		//HTML側でアクセスするためにモデル"cartlist"へ格納
+		model.addAttribute("cartlist", cartList);
+		//カートを表示する
+		return "cart";
+	}
+	//カートを削除する機能
+	@GetMapping("/del/{code}")
+	public String cartDel(@PathVariable Integer code,Model model) {
+		//カートから対象コードの商品を削除する
+
+		
+		//cartの内容を取得する
+		List<ItemCountDto> cartList = itemrepository.findItemInCart();
+		//HTML側でアクセスするためにモデル"cartlist"へ格納
+		model.addAttribute("cartlist", cartList);
+		//カートを表示する
+		return "cart";
+	}
+	
 	//itemテーブルへのアクセス用リポジトリ
 	@Autowired
 	ItemRepository itemrepository;
 	//cartテーブルへのアクセス用リポジトリ
 	@Autowired
-	CartRepository cartrepository;
+	CartRepository cartrepo;
 
 	//トップページへのアクセス
 	@GetMapping("/")
@@ -41,13 +84,13 @@ public class RequestParamController {
 	}
 	
 	//商品表示へのアクセス
-	@GetMapping("itemlist")
+	@GetMapping("cardlist")
 	public String displayItemList(Model model) {
 		//itemテーブルの一覧取得
 		List<Item> itemList = itemrepository.findAll();
 		//thymeleafでアクセスするためにモデル"itemlist"へ格納
 		model.addAttribute("itemlist", itemList);
-		return "itemlist";
+		return "cardlist";
 	}
 	
 	//ショップについてへのアクセス
@@ -76,23 +119,5 @@ public class RequestParamController {
 		return "shop";
 	}
 	
-	@GetMapping("/cart/{code}")
-	public String cartIn(@PathVariable Integer code,Model model) {
-		Cart cart;
-		//cartに同じ商品があれば数を追加する
-		Optional<Cart> currentcart = cartrepository.findById(code);
-		//cartに同じ商品があれば数を追加する
-		if(currentcart.isEmpty()) {
-			cart = new Cart(code,1);
-		}else {
-			cart = new Cart(code,1+currentcart.get().getCount());
-		}
-		
-		cartrepository.save(cart);
-		//cartの内容を取得する
-		List<ItemCountDto> cartList = itemrepository.findItemInCart();
-		//thymeleafでアクセスするためにモデル"cartlist"へ格納
-		model.addAttribute("cartlist", cartList);
-		return "cart";
-	}
+
 }
