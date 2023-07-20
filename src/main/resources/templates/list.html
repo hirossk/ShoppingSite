@@ -9,6 +9,7 @@
 			<div class="container px-4 px-lg-5 mt-5">
 				<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 					<table class="table table-striped">
+						<!-- 表の見出し -->
 						<thead>
 							<tr>
 								<th scope="col">コード</th>
@@ -17,14 +18,16 @@
 								<th scope="col">画像</th>
 							</tr>
 						</thead>
+						<!-- 商品の一覧表示 -->
 						<tbody>
 							<tr th:each="item : ${itemlist}">
-								<td th:text="${item.code}" class="tdtest">コード</th>
-								<td th:text="${item.name}" class="tdtest">商品名</td>
-								<td th:text="${item.price}" class="tdtest">価格</td>
-								<td class="tdtest"><img 
-											th:src="@{/images/{image}.png (image=${item.image})}" 
-								           			width=120 height=96 alt="${item.image}"></td>
+								<td th:text="code" class="tdtest">コード</th>
+								<td th:text="name" class="tdtest">商品名</td>
+								<td th:text="price" class="tdtest">価格</td>
+								<td class="tdtest" th:with="image=image">
+									<img th:src="@{/images/{image}.png (image=${image})}" 
+								           			width=120 height=96 th:alt="${image}">
+								</td>
 							</tr>
 						</tbody>
 					</table>
