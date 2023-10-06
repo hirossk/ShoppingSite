@@ -93,6 +93,26 @@ public class ReqController {
         return "cardlist";
     }
     
+    @GetMapping("cardlist/{key}")
+    public String displaySortItemList(@PathVariable Integer key,Model model) {
+        //
+        List<Item> itemList;
+        switch(key) {
+        case 1:
+            itemList = itemrepository.findItemSortByPrice();
+            break;
+        case 2:
+            itemList = itemrepository.findItemSortByCategory();
+            break;
+        default:
+            itemList = itemrepository.findAll();
+        }
+        
+        //thymeleafでアクセスするためにモデル"itemlist"へ格納
+        model.addAttribute("itemlist", itemList);
+        return "cardlist";
+    }
+    
     //ショップについてへのアクセス
     @GetMapping("about")
     public String displayShopInfo(Model model) {

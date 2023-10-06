@@ -22,6 +22,19 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     )
     List<Object[]> findItemPricesRaw();
 
+    @Query(
+            value ="SELECT code, name, price, image " +
+                    "FROM item ORDER BY PRICE",
+            nativeQuery = true
+    )
+    List<Item> findItemSortByPrice();
+    @Query(
+            value ="SELECT code, name, price, image " +
+                    "FROM item ORDER BY CATEGORY",
+            nativeQuery = true
+    )
+    List<Item> findItemSortByCategory();
+    
     default List<ItemCountDto> findItemInCart(){
         return findItemPricesRaw()
                 .stream()
