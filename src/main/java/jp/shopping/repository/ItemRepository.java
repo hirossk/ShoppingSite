@@ -30,7 +30,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     List<Item> findItemSortByPrice();
     @Query(
             value ="SELECT code, name, price, image " +
-                    "FROM item ORDER BY CATEGORY",
+                    "FROM item ORDER BY CATEGORY DESC",
             nativeQuery = true
     )
     List<Item> findItemSortByCategory();
