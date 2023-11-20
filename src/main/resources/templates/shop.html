@@ -4,6 +4,14 @@
 
 <body>
   <div layout:fragment="content">
+	<a class="btn btn-danger"
+   href="/shop/1">価格順</a>
+    <a class="btn btn-danger"
+   href="/shop/2">カテゴリ順</a>
+    <a class="btn btn-danger"
+   href="/shop/3">名前順</a>
+    <a class="btn btn-danger"
+   href="/shop/4">商品コード順</a>   
     <!-- Page Content-->
 
     <section class="py-5">
@@ -25,7 +33,7 @@
                 </div>
                 <!-- Product actions-->
                 <div class="text-center">
-  <a class=""
+  <a class="btn btn-primary"
    th:href="@{/cart/{code} (code=${item.code})}">
                     カートに入れる
                     </a>

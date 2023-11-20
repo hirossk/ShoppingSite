@@ -34,11 +34,12 @@ public class ReqController {
         }
         
         //カートに一つ追加する
-
+        genzaisu = genzaisu + 1;
+        cart = new Cart(code,genzaisu);
         
         //カートにデータを保存
+        cartrepo.save(cart);
 
-        
         //cartの内容を取得する
         List<ItemCountDto> cartList = itemrepository.findItemInCart();
         //HTML側でアクセスするためにモデル"cartlist"へ格納
@@ -50,7 +51,7 @@ public class ReqController {
     @GetMapping("/del/{code}")
     public String cartDel(@PathVariable Integer code,Model model) {
         //カートから対象コードの商品を削除する
-
+    	cartrepo.deleteById(code);
         
         //cartの内容を取得する
         List<ItemCountDto> cartList = itemrepository.findItemInCart();
@@ -104,6 +105,12 @@ public class ReqController {
         case 2:
             itemList = itemrepository.findItemSortByCategory();
             break;
+        case 3:
+            itemList = itemrepository.findItemSortByName();
+            break;
+        case 4:
+            itemList = itemrepository.findItemSortByCode();
+            break;
         default:
             itemList = itemrepository.findAll();
         }
@@ -135,6 +142,31 @@ public class ReqController {
         //itemテーブルの一覧取得
         List<Item> itemList = itemrepository.findAll();
         //商品一覧表示でthymeleafを使ってアクセスするためにモデル"itemlist"へ格納
+        model.addAttribute("itemlist", itemList);
+        return "shop";
+    }
+    @GetMapping("shop/{key}")
+    public String shopSortItemList(@PathVariable Integer key,Model model) {
+        //
+        List<Item> itemList;
+        switch(key) {
+        case 1:
+            itemList = itemrepository.findItemSortByPrice();
+            break;
+        case 2:
+            itemList = itemrepository.findItemSortByCategory();
+            break;
+        case 3:
+            itemList = itemrepository.findItemSortByName();
+            break;
+        case 4:
+            itemList = itemrepository.findItemSortByCode();
+            break;
+        default:
+            itemList = itemrepository.findAll();
+        }
+        
+        //thymeleafでアクセスするためにモデル"itemlist"へ格納
         model.addAttribute("itemlist", itemList);
         return "shop";
     }

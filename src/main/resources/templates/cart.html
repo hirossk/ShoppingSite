@@ -4,6 +4,7 @@
 
 <body>
   <div layout:fragment="content">
+	  ショッピングカート
     <!-- Section-->
     <section class="py-5">
       <div class="container px-4 px-lg-5 mt-5">
@@ -32,9 +33,9 @@
                 <!-- カートから削除する機能 -->
                 <td class="text-center">
                   <!-- 削除ボタンは赤くする -->
-<a class="btn" 
-  th:href="@{/del/{code} (code=${cart.code})}">
-
+<a class="btn btn-danger "
+th:href="@{/del/{code} (code=${cart.code})}">
+削除
 </a>
                 </td>
               </tr>
@@ -43,8 +44,8 @@
         </div>
         <div class="text-center">
           <!-- ショップに戻る機能 -->
-<a class="btn" th:href="@{/shop}">
-
+<a class="btn btn-primary " th:href="@{/shop}">
+ショップに戻る
 </a>
         </div>
       </div>
