@@ -21,7 +21,7 @@
             <!-- 商品の一覧表示 -->
             <tbody>
 <tr th:each="item : ${itemlist}">
-  <td th:text="code" class="tdtest">コード</th>
+  <td th:text="code" class="tdtest">コード</td>
   <td th:text="name" class="tdtest">商品名</td>
   <td th:text="price" class="tdtest">価格</td>
   <td class="tdtest" th:with="image=image">
