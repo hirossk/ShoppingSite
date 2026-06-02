@@ -1,0 +1,52 @@
+<%- include('partials/header') %>
+
+<!-- Section-->
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">コード</th>
+                        <th scope="col">商品名</th>
+                        <th scope="col">価格</th>
+                        <th scope="col">数量</th>
+                        <th scope="col">金額</th>
+                        <th scope="col">写真</th>
+                        <th scope="col">編集</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% cartlist.forEach(function(cart) { %>
+                    <tr>
+                        <td class="thtest"><%= cart.code %></td>
+                        <td class="tdtest"><%= cart.name %></td>
+                        <td class="tdtest"><%= cart.price %></td>
+                        <td class="tdtest"><%= cart.count %></td>
+                        <td class="tdtest"><%= cart.count * cart.price %></td>
+                        <td class="tdtest">
+                            <img src="/images/<%= cart.image %>.png"
+                                width="120" height="96" alt="<%= cart.image %>">
+                        </td>
+                        <!-- カートから削除する機能 -->
+                        <td class="text-center">
+                            <!-- 削除ボタンは赤くする -->
+                            <a class="btn btn-danger" href="/del/<%= cart.code %>">
+                                削除
+                            </a>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center">
+            <!-- ショップに戻る機能 -->
+            <a class="btn btn-primary" href="/shop">
+                ショップに戻る
+            </a>
+        </div>
+    </div>
+</section>
+
+<%- include('partials/footer') %>

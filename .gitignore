@@ -35,3 +35,14 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Node.js / shop-app ###
+shop-app/node_modules/
+shop-app/node/
+shop-app/.env
+shop-app/shop.db
+shop-app/vscode/
+
+### portable-dev ###
+portable-dev/node.zip
+portable-dev/node-*/
