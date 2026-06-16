@@ -202,9 +202,15 @@ function purchase() {
 
     // 在庫を減らす
     for (const item of cartItems) {
+        // 【課題5 穴埋め】買った数だけ在庫を減らそう！（ここは本物のプログラム＝計算だよ）
+        //   item.stock … 今の在庫の数
+        //   item.count … カートに入っている（買う）数
+        //   新しい在庫 ＝ 今の在庫 − 買った数  → item.stock - item.count
+        //   ↓ 今は item.stock（今の在庫）のままなので、在庫が減りません。ここを直そう！
+        const newStock = item.stock;
         db.run(
-            'UPDATE item SET stock = stock - ? WHERE code = ?',
-            [item.count, item.code]
+            'UPDATE item SET stock = ? WHERE code = ?',
+            [newStock, item.code]
         );
     }
 

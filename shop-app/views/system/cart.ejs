@@ -1,4 +1,4 @@
-<%- include('partials/header') %>
+<%- include('../partials/header') %>
 
 <!-- ============================================================ -->
 <!--  カート確認・購入 — 完成版のお店                            -->
@@ -30,7 +30,7 @@
     <% } else { %>
 
     <!-- カート内容テーブル（共通パーツ：Step5 と同じものを使用） -->
-    <%- include('partials/cart_table', { cartlist: cartlist, total: total, removeUrl: '/cart/remove' }) %>
+    <%- include('../partials/cart_table', { cartlist: cartlist, total: total, removeUrl: '/cart/remove' }) %>
 
     <!-- 購入ボタン -->
     <div class="text-center">
@@ -52,4 +52,4 @@
 </div>
 </section>
 
-<%- include('partials/footer') %>
+<%- include('../partials/footer') %>

@@ -1,4 +1,4 @@
-<%- include('partials/header') %>
+<%- include('../partials/header') %>
 
 <section class="py-4">
 <div class="container mt-4">
@@ -41,7 +41,7 @@
     <% } else { %>
 
     <!-- カート内容テーブル（共通パーツ：本番 /cart と同じものを使用） -->
-    <%- include('partials/cart_table', { cartlist: cartlist, total: total, removeUrl: '/cart/del' }) %>
+    <%- include('../partials/cart_table', { cartlist: cartlist, total: total, removeUrl: '/cart/del' }) %>
 
     <!-- 購入ボタン -->
     <div class="text-center">
@@ -73,4 +73,4 @@
 </div>
 </section>
 
-<%- include('partials/footer') %>
+<%- include('../partials/footer') %>

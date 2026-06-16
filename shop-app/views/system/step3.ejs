@@ -1,4 +1,4 @@
-<%- include('partials/header') %>
+<%- include('../partials/header') %>
 
 <section class="py-4">
 <div class="container mt-4">
@@ -24,7 +24,7 @@
     <% } else { %>
     <div class="row gx-4 gy-4 row-cols-2 row-cols-md-3 row-cols-xl-4">
         <% itemlist.forEach(function(item) { %>
-        <%- include('partials/product_card', { item: item, showCart: true, addUrl: '/cart/add', showDetail: true }) %>
+        <%- include('../partials/product_card', { item: item, showCart: true, addUrl: '/cart/add', showDetail: true }) %>
         <% }) %>
     </div>
     <% } %>
@@ -42,4 +42,4 @@
 </div>
 </section>
 
-<%- include('partials/footer') %>
+<%- include('../partials/footer') %>

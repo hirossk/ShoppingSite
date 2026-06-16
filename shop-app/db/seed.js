@@ -14,9 +14,14 @@ function insertSeedData(db) {
 
     // ---- 商品データ（自由に追加・変更してOK！） ----
 
-    db.run(`INSERT INTO item (name, price, image, stock, description) VALUES ('ギター',       30000, 'guitar',   10, '初心者にもやさしいアコースティックギター。軽くて弾きやすく、はじめの1本にぴったりです。')`);
-    db.run(`INSERT INTO item (name, price, image, stock, description) VALUES ('キーボード',   48000, 'midi',     10, '61鍵のスタンダードなキーボード。たくさんの音色が入っていて、練習にも演奏にも使えます。')`);
-    db.run(`INSERT INTO item (name, price, image, stock, description) VALUES ('エレクトーン', 300000, 'electone', 10, '足鍵盤までついた本格エレクトーン。1台でバンドのような演奏が楽しめる上位モデルです。')`);
+    // db.run(`INSERT INTO item (name, price, image, stock, description) VALUES ('ギター',       30000, 'guitar',   10, '初心者にもやさしいアコースティックギター。軽くて弾きやすく、はじめの1本にぴったりです。')`);
+    // db.run(`INSERT INTO item (name, price, image, stock, description) VALUES ('エレクトーン', 300000, 'electone', 10, '足鍵盤までついた本格エレクトーン。1台でバンドのような演奏が楽しめる上位モデルです。')`);
+    // db.run(`INSERT INTO item (name, price, image, stock, description) VALUES ('キーボード',   48000, 'midi',     10, '61鍵のスタンダードなキーボード。たくさんの音色が入っていて、練習にも演奏にも使えます。')`);
+
+    // 【課題1-A 穴埋め】下の行のいちばん前にある「// 」を消して使えるようにし、
+    //   ______ を自分で決めて、新しい商品を1つ追加しよう！（'商品名', 値段, '画像名', 在庫, '説明文' の順）
+    //   ※使える画像名の一覧は、ワークシートの一番下にあるよ。
+    // db.run(`INSERT INTO item (name, price, image, stock, description) VALUES ('______', ______, '______', 10, '______')`);
 
 }
 

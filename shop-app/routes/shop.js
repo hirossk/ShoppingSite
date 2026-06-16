@@ -36,7 +36,7 @@ router.get('/', (req, res) => {
 // ================================================================
 router.get('/shop', (req, res) => {
     const itemlist = db.findAllItems();
-    res.render('shop', { itemlist });
+    res.render('system/shop', { itemlist });
 });
 
 // 【完成版の店】カートに入れる → カート画面へ
@@ -53,7 +53,7 @@ router.get('/cart', (req, res) => {
     const cartlist = db.findItemInCart();
     const total    = db.calcCartTotal(cartlist);
     const errorMsg = req.query.error || '';
-    res.render('cart', { cartlist, total, errorMsg });
+    res.render('system/cart', { cartlist, total, errorMsg });
 });
 
 // 【完成版の店】カートから削除
@@ -77,7 +77,7 @@ router.post('/buy', (req, res) => {
 // 【完成版の店】購入完了
 router.get('/complete', (req, res) => {
     const order = req.session.lastOrder || { items: [], total: 0 };
-    res.render('complete', { order });
+    res.render('system/complete', { order });
 });
 
 // ================================================================
@@ -87,16 +87,16 @@ router.get('/item/:code', (req, res) => {
     const code = parseInt(req.params.code, 10);
     const item = db.findItemByCode(code);
     if (!item) {
-        return res.status(404).render('item', { item: null, addUrl: '/shop/add' });
+        return res.status(404).render('system/item', { item: null, addUrl: '/shop/add' });
     }
-    res.render('item', { item, addUrl: '/shop/add' });
+    res.render('system/item', { item, addUrl: '/shop/add' });
 });
 
 // ================================================================
 // 【学習用】Step 1〜6 の案内メニュー（授業で作る過程を残してある）
 // ================================================================
 router.get('/steps', (req, res) => {
-    res.render('index_steps');
+    res.render('system/index_steps');
 });
 
 // ================================================================
@@ -104,7 +104,7 @@ router.get('/steps', (req, res) => {
 // ================================================================
 router.get('/step1', (req, res) => {
     const itemlist = db.findAllItems();
-    res.render('step1', {
+    res.render('system/step1', {
         itemlist,
         imageList: IMAGE_LIST,
         message: req.query.msg || '',
@@ -140,7 +140,7 @@ router.post('/step1/delete', (req, res) => {
 // ================================================================
 router.get('/step2', (req, res) => {
     const itemlist = db.findAllItems();
-    res.render('step2', { itemlist });
+    res.render('system/step2', { itemlist });
 });
 
 // ================================================================
@@ -148,7 +148,7 @@ router.get('/step2', (req, res) => {
 // ================================================================
 router.get('/step3', (req, res) => {
     const itemlist = db.findAllItems();
-    res.render('step3', { itemlist });
+    res.render('system/step3', { itemlist });
 });
 
 // カートに追加 → カート画面（Step4）へ
@@ -165,7 +165,7 @@ router.get('/step4', (req, res) => {
     const cartlist  = db.findItemInCart();
     const total     = db.calcCartTotal(cartlist);
     const errorMsg  = req.query.error || '';
-    res.render('step4', { cartlist, total, errorMsg });
+    res.render('system/step4', { cartlist, total, errorMsg });
 });
 
 // カートから削除
@@ -192,7 +192,7 @@ router.post('/purchase', (req, res) => {
 // ================================================================
 router.get('/step5', (req, res) => {
     const order = req.session.lastOrder || { items: [], total: 0 };
-    res.render('step5', { order });
+    res.render('system/step5', { order });
 });
 
 // ================================================================
@@ -201,6 +201,6 @@ router.get('/step5', (req, res) => {
 router.get('/list',     (req, res) => res.redirect('/step2'));
 router.get('/cardlist', (req, res) => res.redirect('/step2'));
 router.get('/step6',    (req, res) => res.redirect('/step5'));
-router.get('/about',    (req, res) => res.render('about'));
+router.get('/about',    (req, res) => res.render('system/about'));
 
 module.exports = router;

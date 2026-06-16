@@ -37,7 +37,10 @@
                     </td>
                     <!-- 小計 ＝ 数量 × 価格 -->
                     <td class="text-end align-middle fw-bold">
-                        <%= (cart.count * cart.price).toLocaleString() %>円
+                        <!-- 【課題4 穴埋め】小計を計算して出そう。'dummy' を書きかえてね。
+                             ヒント：小計は「数量 × 値段」。cart.count（数量）と cart.price（値段）をかけ算する。
+                                    (cart.count * cart.price).toLocaleString() と書いてみよう。 -->
+                        <%= 'dummy' %>円
                     </td>
                     <td class="text-center align-middle">
                         <a href="<%= removeUrl %>/<%= cart.code %>" class="btn btn-sm btn-outline-danger"
