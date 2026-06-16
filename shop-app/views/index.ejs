@@ -30,7 +30,7 @@
         <% } else { %>
         <div class="row gx-4 gy-4 row-cols-2 row-cols-md-3 row-cols-xl-4">
             <% featured.forEach(function(item) { %>
-            <%- include('partials/product_card', { item: item, showCart: false, addUrl: '' }) %>
+            <%- include('partials/product_card', { item: item, showCart: false, addUrl: '', showDetail: true }) %>
             <% }) %>
         </div>
 

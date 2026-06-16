@@ -37,6 +37,15 @@ async function initDb(forceReset = false) {
         } catch (e) {
             // すでにある場合は無視
         }
+
+        // descriptionカラムが無ければ追加（商品詳細ページ用）
+        try {
+            db.run("ALTER TABLE item ADD COLUMN description TEXT DEFAULT ''");
+            saveDb();
+            console.log('descriptionカラムを追加しました');
+        } catch (e) {
+            // すでにある場合は無視
+        }
         console.log('既存のDBを読み込みました: ' + DB_PATH);
     } else {
         // 新規DB作成（または --initdb によるリセット）
@@ -50,11 +59,12 @@ async function initDb(forceReset = false) {
         // テーブル作成（stockカラム付き）
         db.run(`
             CREATE TABLE IF NOT EXISTS item (
-                code  INTEGER PRIMARY KEY AUTOINCREMENT,
-                name  TEXT    NOT NULL,
-                price INTEGER NOT NULL,
-                image TEXT    NOT NULL,
-                stock INTEGER NOT NULL DEFAULT 10
+                code        INTEGER PRIMARY KEY AUTOINCREMENT,
+                name        TEXT    NOT NULL,
+                price       INTEGER NOT NULL,
+                image       TEXT    NOT NULL,
+                stock       INTEGER NOT NULL DEFAULT 10,
+                description TEXT    DEFAULT ''
             )
         `);
         db.run(`
@@ -76,7 +86,7 @@ async function initDb(forceReset = false) {
 
 // 全商品取得（在庫付き）
 function findAllItems() {
-    const stmt = db.prepare('SELECT code, name, price, image, stock FROM item ORDER BY code');
+    const stmt = db.prepare('SELECT code, name, price, image, stock, description FROM item ORDER BY code');
     const rows = [];
     while (stmt.step()) {
         rows.push(stmt.getAsObject());
@@ -85,11 +95,24 @@ function findAllItems() {
     return rows;
 }
 
+// 商品を1件取得（商品詳細ページ用）
+function findItemByCode(code) {
+    const stmt = db.prepare('SELECT code, name, price, image, stock, description FROM item WHERE code = ?');
+    stmt.bind([code]);
+    if (stmt.step()) {
+        const row = stmt.getAsObject();
+        stmt.free();
+        return row;
+    }
+    stmt.free();
+    return null;
+}
+
 // 商品を1件追加（Step1のデータエントリー）
-function addItem(name, price, image) {
+function addItem(name, price, image, description = '') {
     db.run(
-        'INSERT INTO item (name, price, image, stock) VALUES (?, ?, ?, 10)',
-        [name, price, image]
+        'INSERT INTO item (name, price, image, stock, description) VALUES (?, ?, ?, 10, ?)',
+        [name, price, image, description]
     );
     saveDb();
 }
@@ -200,6 +223,7 @@ function calcCartTotal(cartItems) {
 module.exports = {
     initDb,
     findAllItems,
+    findItemByCode,
     addItem,
     deleteItem,
     findItemInCart,

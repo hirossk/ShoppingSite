@@ -6,7 +6,7 @@
     <!-- Step ヘッダー -->
     <div class="d-flex align-items-center mb-3">
         <span class="badge bg-primary fs-5 me-3">Step 1</span>
-        <h2 class="mb-0">データエントリー　<small class="text-muted fs-6">〜商品をデータベースに追加しよう〜</small></h2>
+        <h2 class="mb-0">商品登録　<small class="text-muted fs-6">〜お店に並べる商品をデータベースに登録しよう〜</small></h2>
     </div>
 
     <!-- メッセージ -->
@@ -73,6 +73,13 @@
                                 <img id="previewImg" src="" alt="" width="120" height="96"
                                      style="display:none; border:1px solid #ddd; border-radius:4px;">
                             </div>
+                        </div>
+
+                        <!-- 商品説明（商品詳細ページに表示される。なくてもOK） -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label fw-bold">商品説明 <span class="text-muted small">（任意）</span></label>
+                            <textarea class="form-control" id="description" name="description" rows="3"
+                                      placeholder="例：初心者にもやさしいギターです。" maxlength="300"></textarea>
                         </div>
 
                         <div class="d-grid">
@@ -145,7 +152,7 @@
             <i class="bi bi-house me-1"></i>Homeへ
         </a>
         <a href="/step2" class="btn btn-success">
-            次へ：Step 2 一覧表示 <i class="bi bi-arrow-right"></i>
+            次へ：Step 2 カード表示・詳細 <i class="bi bi-arrow-right"></i>
         </a>
     </div>
 

@@ -5,15 +5,16 @@
 
     <!-- Step ヘッダー -->
     <div class="d-flex align-items-center mb-3">
-        <span class="badge bg-info fs-5 me-3">Step 3</span>
-        <h2 class="mb-0">カード形式で表示　<small class="text-muted fs-6">〜商品をおしゃれに並べよう〜</small></h2>
+        <span class="badge bg-warning fs-5 me-3">Step 3</span>
+        <h2 class="mb-0">カートに入れる　<small class="text-muted fs-6">〜「カートに入れる」ボタンを付けよう〜</small></h2>
     </div>
 
-    <div class="alert alert-info small">
+    <div class="alert alert-warning small">
         <i class="bi bi-info-circle me-1"></i>
-        <strong>ポイント：</strong> 商品カードの中身は共通パーツ
-        <code>views/partials/product_card.ejs</code> に書かれています。
-        ここを直すと、この Step3 だけでなく <strong>本番ショップ(/shop) のカードも同時に変わります</strong>！
+        <strong>ポイント：</strong> Step2 と同じ共通パーツ
+        <code>views/partials/product_card.ejs</code> を、今度は「カートに入れる」ボタン付き
+        （<code>showCart: true</code>）で表示しています。ボタンを押すと <code>/cart/add/番号</code>
+        にアクセスして、データベースの <code>cart</code> テーブルに商品が入り、カート画面（Step4）に進みます。
     </div>
 
     <% if (itemlist.length === 0) { %>
@@ -23,7 +24,7 @@
     <% } else { %>
     <div class="row gx-4 gy-4 row-cols-2 row-cols-md-3 row-cols-xl-4">
         <% itemlist.forEach(function(item) { %>
-        <%- include('partials/product_card', { item: item, showCart: false, addUrl: '' }) %>
+        <%- include('partials/product_card', { item: item, showCart: true, addUrl: '/cart/add', showDetail: true }) %>
         <% }) %>
     </div>
     <% } %>
@@ -31,10 +32,10 @@
     <!-- ナビ -->
     <div class="d-flex justify-content-between mt-4">
         <a href="/step2" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left me-1"></i>Step 2 テーブル表示
+            <i class="bi bi-arrow-left me-1"></i>Step 2 カード表示
         </a>
-        <a href="/step4" class="btn btn-warning">
-            次へ：Step 4 ショップ（カートに入れる） <i class="bi bi-arrow-right"></i>
+        <a href="/step4" class="btn btn-danger">
+            次へ：Step 4 購入する <i class="bi bi-arrow-right"></i>
         </a>
     </div>
 

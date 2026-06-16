@@ -74,11 +74,22 @@ router.post('/buy', (req, res) => {
     res.redirect('/complete');
 });
 
-// 【完成版の店】購入完了・在庫確認
+// 【完成版の店】購入完了
 router.get('/complete', (req, res) => {
-    const order    = req.session.lastOrder || { items: [], total: 0 };
-    const itemlist = db.findAllItems();
-    res.render('complete', { order, itemlist });
+    const order = req.session.lastOrder || { items: [], total: 0 };
+    res.render('complete', { order });
+});
+
+// ================================================================
+// 【完成版の店】商品詳細ページ（カードの「詳細」から開く）
+// ================================================================
+router.get('/item/:code', (req, res) => {
+    const code = parseInt(req.params.code, 10);
+    const item = db.findItemByCode(code);
+    if (!item) {
+        return res.status(404).render('item', { item: null, addUrl: '/shop/add' });
+    }
+    res.render('item', { item, addUrl: '/shop/add' });
 });
 
 // ================================================================
@@ -101,7 +112,7 @@ router.get('/step1', (req, res) => {
 });
 
 router.post('/step1', (req, res) => {
-    const { name, price, image } = req.body;
+    const { name, price, image, description } = req.body;
 
     // 簡易バリデーション
     if (!name || !price || !image) {
@@ -113,7 +124,7 @@ router.post('/step1', (req, res) => {
         return res.redirect('/step1?msg=error_price');
     }
 
-    db.addItem(name.trim(), priceNum, image);
+    db.addItem(name.trim(), priceNum, image, (description || '').trim());
     res.redirect('/step1?msg=added');
 });
 
@@ -125,7 +136,7 @@ router.post('/step1/delete', (req, res) => {
 });
 
 // ================================================================
-// Step 2：テーブル形式で一覧表示（画像付き）
+// Step 2：カード形式で表示（画像・価格・在庫）＋ 商品詳細ページ
 // ================================================================
 router.get('/step2', (req, res) => {
     const itemlist = db.findAllItems();
@@ -133,71 +144,63 @@ router.get('/step2', (req, res) => {
 });
 
 // ================================================================
-// Step 3：カード形式で一覧表示
+// Step 3：カートに入れる（カードに「カートに入れる」ボタン）
 // ================================================================
 router.get('/step3', (req, res) => {
     const itemlist = db.findAllItems();
     res.render('step3', { itemlist });
 });
 
-// ================================================================
-// Step 4：ショップ（カートに入れる）
-// ================================================================
-router.get('/step4', (req, res) => {
-    const itemlist = db.findAllItems();
-    res.render('step4', { itemlist });
-});
-
-// カートに追加
+// カートに追加 → カート画面（Step4）へ
 router.get('/cart/add/:code', (req, res) => {
     const code = parseInt(req.params.code, 10);
     db.addToCart(code);
-    res.redirect('/step5');
+    res.redirect('/step4');
 });
 
 // ================================================================
-// Step 5：カート確認・購入
+// Step 4：購入する（カート確認 → 買うと在庫が減る）
 // ================================================================
-router.get('/step5', (req, res) => {
+router.get('/step4', (req, res) => {
     const cartlist  = db.findItemInCart();
     const total     = db.calcCartTotal(cartlist);
     const errorMsg  = req.query.error || '';
-    res.render('step5', { cartlist, total, errorMsg });
+    res.render('step4', { cartlist, total, errorMsg });
 });
 
 // カートから削除
 router.get('/cart/del/:code', (req, res) => {
     const code = parseInt(req.params.code, 10);
     db.removeFromCart(code);
-    res.redirect('/step5');
+    res.redirect('/step4');
 });
 
-// 購入処理（POST）
+// 購入処理（POST）→ 在庫を減らして購入完了（Step5）へ
 router.post('/purchase', (req, res) => {
     const result = db.purchase();
     if (!result.success) {
-        return res.redirect('/step5?error=' + encodeURIComponent(result.message));
+        return res.redirect('/step4?error=' + encodeURIComponent(result.message));
     }
     const total = db.calcCartTotal(result.items);
-    // 購入した商品と合計をセッションに保存してStep6へ
+    // 購入した商品と合計をセッションに保存してStep5へ
     req.session.lastOrder = { items: result.items, total };
-    res.redirect('/step6');
+    res.redirect('/step5');
 });
 
 // ================================================================
-// Step 6：購入完了・在庫確認
+// Step 5：購入完了画面
 // ================================================================
-router.get('/step6', (req, res) => {
-    const order    = req.session.lastOrder || { items: [], total: 0 };
-    const itemlist = db.findAllItems(); // 在庫確認用
-    res.render('step6', { order, itemlist });
+router.get('/step5', (req, res) => {
+    const order = req.session.lastOrder || { items: [], total: 0 };
+    res.render('step5', { order });
 });
 
 // ================================================================
 // 旧URL互換（既存リンクが壊れないように残す）
 // ================================================================
 router.get('/list',     (req, res) => res.redirect('/step2'));
-router.get('/cardlist', (req, res) => res.redirect('/step3'));
+router.get('/cardlist', (req, res) => res.redirect('/step2'));
+router.get('/step6',    (req, res) => res.redirect('/step5'));
 router.get('/about',    (req, res) => res.render('about'));
 
 module.exports = router;

@@ -1,0 +1,49 @@
+<%
+// ============================================================
+//  商品詳細（共通パーツ）
+//  ★Step2 の「詳細」リンクと、本番ショップの商品詳細ページ(/item/番号)
+//    が、この同じパーツを使います。
+//
+//  受け取る値：
+//    item   … 1つの商品（name / price / image / stock / code / description）
+//    addUrl … 「カートに入れる」の行き先（例 '/cart/add' や '/shop/add'）
+// ============================================================
+%>
+<div class="card shadow-sm">
+    <div class="row g-0">
+        <!-- 左：大きな商品画像 -->
+        <div class="col-md-5 d-flex align-items-center justify-content-center bg-light p-4">
+            <img src="/images/<%= item.image %>.png" alt="<%= item.name %>"
+                 class="img-fluid" style="max-height:320px; object-fit:contain;">
+        </div>
+        <!-- 右：商品情報 -->
+        <div class="col-md-7">
+            <div class="card-body p-4">
+                <h2 class="fw-bold mb-2"><%= item.name %></h2>
+                <p class="text-primary fs-2 fw-bold mb-3">
+                    ¥<%= item.price.toLocaleString() %>
+                </p>
+                <p class="mb-3">
+                    <% if (item.stock > 0) { %>
+                    <span class="badge bg-success fs-6">在庫 <%= item.stock %> 個</span>
+                    <% } else { %>
+                    <span class="badge bg-danger fs-6">売り切れ</span>
+                    <% } %>
+                </p>
+                <hr>
+                <h6 class="text-muted">商品説明</h6>
+                <p class="mb-4" style="white-space:pre-wrap;"><%= item.description && item.description.length > 0 ? item.description : 'この商品の説明はまだありません。' %></p>
+
+                <% if (item.stock > 0) { %>
+                <a href="<%= addUrl %>/<%= item.code %>" class="btn btn-primary btn-lg px-5">
+                    <i class="bi bi-cart-plus me-2"></i>カートに入れる
+                </a>
+                <% } else { %>
+                <button class="btn btn-secondary btn-lg px-5" disabled>
+                    <i class="bi bi-x-circle me-2"></i>売り切れ
+                </button>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>

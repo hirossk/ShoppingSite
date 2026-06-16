@@ -5,37 +5,68 @@
 
     <!-- Step ヘッダー -->
     <div class="d-flex align-items-center mb-3">
-        <span class="badge bg-warning fs-5 me-3">Step 4</span>
-        <h2 class="mb-0">ショップ　<small class="text-muted fs-6">〜カートに入れてみよう〜</small></h2>
+        <span class="badge bg-danger fs-5 me-3">Step 4</span>
+        <h2 class="mb-0">購入する　<small class="text-muted fs-6">〜カートを確認して買う・買うと在庫が減る〜</small></h2>
     </div>
 
-    <div class="alert alert-warning small">
+    <div class="alert alert-danger small">
         <i class="bi bi-info-circle me-1"></i>
-        <strong>ポイント：</strong> Step3 と同じ共通パーツ
-        <code>views/partials/product_card.ejs</code> を、今度は「カートに入れる」ボタン付き
-        （<code>showCart: true</code>）で表示しています。ボタンを押すと <code>/cart/add/コード番号</code>
-        にアクセスして、データベースの <code>cart</code> テーブルに追加されます。
+        <strong>ポイント：</strong> カートの表は共通パーツ
+        <code>views/partials/cart_table.ejs</code> に書かれています（小計 ＝ 数量 × 価格 もここ）。
+        ここを直すと <strong>本番ショップのカート(/cart) も同時に変わります</strong>。
+        「購入する」ボタンで <code>POST /purchase</code> を呼び出すと、買った分だけ
+        <strong>商品の在庫（stock）が減って</strong>、購入完了（Step5）に進みます。
     </div>
 
-    <% if (itemlist.length === 0) { %>
-    <div class="text-center p-5 text-muted">
-        商品がまだありません。<a href="/step1">Step 1</a> で商品を追加してください。
+    <!-- エラーメッセージ -->
+    <% if (errorMsg) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        ❌ <%= errorMsg %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <% } %>
+
+    <% if (cartlist.length === 0) { %>
+    <!-- カートが空 -->
+    <div class="card text-center p-5 shadow-sm">
+        <div class="card-body">
+            <i class="bi bi-cart-x display-1 text-muted"></i>
+            <h4 class="mt-3 text-muted">カートが空です</h4>
+            <p class="text-muted">Step 3 から商品をカートに入れてください。</p>
+            <a href="/step3" class="btn btn-warning mt-2">
+                <i class="bi bi-shop-window me-1"></i>商品をえらぶ（Step 3）
+            </a>
+        </div>
     </div>
     <% } else { %>
-    <div class="row gx-4 gy-4 row-cols-2 row-cols-md-3 row-cols-xl-4">
-        <% itemlist.forEach(function(item) { %>
-        <%- include('partials/product_card', { item: item, showCart: true, addUrl: '/cart/add' }) %>
-        <% }) %>
+
+    <!-- カート内容テーブル（共通パーツ：本番 /cart と同じものを使用） -->
+    <%- include('partials/cart_table', { cartlist: cartlist, total: total, removeUrl: '/cart/del' }) %>
+
+    <!-- 購入ボタン -->
+    <div class="text-center">
+        <form action="/purchase" method="POST">
+            <button type="submit" class="btn btn-danger btn-lg px-5"
+                    onclick="return confirm('合計 <%= total.toLocaleString() %>円 で購入しますか？')">
+                <i class="bi bi-bag-check me-2"></i>購入する（合計 <%= total.toLocaleString() %>円）
+            </button>
+        </form>
+        <div class="mt-2">
+            <a href="/step3" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>買い物を続ける（Step 3）
+            </a>
+        </div>
     </div>
+
     <% } %>
 
     <!-- ナビ -->
     <div class="d-flex justify-content-between mt-4">
         <a href="/step3" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left me-1"></i>Step 3 カード表示
+            <i class="bi bi-arrow-left me-1"></i>Step 3 カートに入れる
         </a>
-        <a href="/step5" class="btn btn-danger">
-            次へ：Step 5 カート確認 <i class="bi bi-arrow-right"></i>
+        <a href="/step5" class="btn btn-dark">
+            Step 5 購入完了画面 <i class="bi bi-arrow-right"></i>
         </a>
     </div>
 

@@ -6,8 +6,8 @@
         <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
             <div class="m-4 my-lg-0">
                 <h1 class="display-5 fw-bold">🛠️ ショッピングサイトを作ろう！（制作ステップ）</h1>
-                <p class="fs-5">Step 1〜6 の順番で進めてみましょう。<br>
-                   商品データを入力して、カートに入れて、購入するまでの流れを体験します。</p>
+                <p class="fs-5">Step 1〜5 の順番で進めてみましょう。<br>
+                   商品を登録して、並べて、カートに入れて、買って、完了画面まで体験します。</p>
                 <a href="/" class="btn btn-outline-dark mt-2">
                     <i class="bi bi-house me-1"></i>完成したお店のトップへ戻る
                 </a>
@@ -25,14 +25,14 @@
             <div class="col mb-4">
                 <div class="card h-100 border-primary">
                     <div class="card-header bg-primary text-white fw-bold">
-                        <i class="bi bi-1-circle-fill me-2"></i>Step 1　データエントリー
+                        <i class="bi bi-1-circle-fill me-2"></i>Step 1　商品登録
                     </div>
                     <div class="card-body">
-                        <p class="card-text">商品名・価格・画像を入力して、データベースに商品を追加してみましょう。</p>
+                        <p class="card-text">お店に並べる商品を登録します。最初の品ぞろえはコード（<code>seed.js</code>）で、追加・削除は管理画面のフォームでできます。</p>
                         <ul class="small text-muted">
-                            <li>フォームに値を入力する</li>
-                            <li>「追加する」ボタンを押す</li>
-                            <li>一覧に追加されるのを確認</li>
+                            <li><code>seed.js</code> で初期商品を決める</li>
+                            <li>フォームから商品を追加する</li>
+                            <li>一覧で確認・削除する</li>
                         </ul>
                     </div>
                     <div class="card-footer">
@@ -47,19 +47,19 @@
             <div class="col mb-4">
                 <div class="card h-100 border-success">
                     <div class="card-header bg-success text-white fw-bold">
-                        <i class="bi bi-2-circle-fill me-2"></i>Step 2　一覧表示（テーブル）
+                        <i class="bi bi-2-circle-fill me-2"></i>Step 2　カード表示・詳細
                     </div>
                     <div class="card-body">
-                        <p class="card-text">追加した商品をテーブル形式で表示します。画像も一緒に確認できます。</p>
+                        <p class="card-text">商品を大きなカードで並べ、クリックすると商品詳細ページが開くようにします。ショッピングサイトらしくなります！</p>
                         <ul class="small text-muted">
-                            <li>DBのデータを読み込む</li>
-                            <li>テーブルで表示する</li>
-                            <li>画像を表示する</li>
+                            <li>画像・価格・在庫をカードで表示</li>
+                            <li>「詳細を見る」で詳細ページへ</li>
+                            <li>本番の <code>/shop</code> と同じ見た目</li>
                         </ul>
                     </div>
                     <div class="card-footer">
                         <a href="/step2" class="btn btn-success w-100">
-                            <i class="bi bi-table me-1"></i>Step 2 へ進む
+                            <i class="bi bi-grid me-1"></i>Step 2 へ進む
                         </a>
                     </div>
                 </div>
@@ -67,21 +67,21 @@
 
             <!-- Step 3 -->
             <div class="col mb-4">
-                <div class="card h-100 border-info">
-                    <div class="card-header bg-info text-white fw-bold">
-                        <i class="bi bi-3-circle-fill me-2"></i>Step 3　カード形式で表示
+                <div class="card h-100 border-warning">
+                    <div class="card-header bg-warning fw-bold">
+                        <i class="bi bi-3-circle-fill me-2"></i>Step 3　カートに入れる
                     </div>
                     <div class="card-body">
-                        <p class="card-text">商品を大きな画像のカード形式で並べてみましょう。ショッピングサイトらしくなります！</p>
+                        <p class="card-text">カードに「カートに入れる」ボタンを付けて、本物のショッピングサイトみたいにしましょう！</p>
                         <ul class="small text-muted">
-                            <li>カードレイアウトを使う</li>
-                            <li>画像を大きく表示する</li>
-                            <li>価格を見やすく表示</li>
+                            <li>ボタンにリンクを貼る</li>
+                            <li>クリックでカートへ追加</li>
+                            <li>カート画面に進む</li>
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <a href="/step3" class="btn btn-info text-white w-100">
-                            <i class="bi bi-grid me-1"></i>Step 3 へ進む
+                        <a href="/step3" class="btn btn-warning w-100">
+                            <i class="bi bi-cart-plus me-1"></i>Step 3 へ進む
                         </a>
                     </div>
                 </div>
@@ -89,21 +89,21 @@
 
             <!-- Step 4 -->
             <div class="col mb-4">
-                <div class="card h-100 border-warning">
-                    <div class="card-header bg-warning fw-bold">
-                        <i class="bi bi-4-circle-fill me-2"></i>Step 4　ショップ（カートに入れる）
+                <div class="card h-100 border-danger">
+                    <div class="card-header bg-danger text-white fw-bold">
+                        <i class="bi bi-4-circle-fill me-2"></i>Step 4　購入する
                     </div>
                     <div class="card-body">
-                        <p class="card-text">「カートに入れる」ボタンを追加して、本物のショッピングサイトみたいにしましょう！</p>
+                        <p class="card-text">カートの中身と合計金額を確認して購入します。買うと、その分だけ在庫が減ります。</p>
                         <ul class="small text-muted">
-                            <li>ボタンにリンクを貼る</li>
-                            <li>クリックでカートへ追加</li>
-                            <li>在庫数も表示</li>
+                            <li>カート内の商品・小計・合計を表示</li>
+                            <li>「購入する」ボタンで注文</li>
+                            <li>在庫（stock）が減る</li>
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <a href="/step4" class="btn btn-warning w-100">
-                            <i class="bi bi-shop-window me-1"></i>Step 4 へ進む
+                        <a href="/step4" class="btn btn-danger w-100">
+                            <i class="bi bi-cart-check me-1"></i>Step 4 へ進む
                         </a>
                     </div>
                 </div>
@@ -111,43 +111,21 @@
 
             <!-- Step 5 -->
             <div class="col mb-4">
-                <div class="card h-100 border-danger">
-                    <div class="card-header bg-danger text-white fw-bold">
-                        <i class="bi bi-5-circle-fill me-2"></i>Step 5　カート・購入
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">カートの中身を確認して、合計金額を表示します。「購入する」ボタンで注文完了！</p>
-                        <ul class="small text-muted">
-                            <li>カート内の商品一覧を表示</li>
-                            <li>合計金額を計算</li>
-                            <li>「購入する」ボタン</li>
-                        </ul>
-                    </div>
-                    <div class="card-footer">
-                        <a href="/step5" class="btn btn-danger w-100">
-                            <i class="bi bi-cart-check me-1"></i>Step 5 へ進む
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Step 6 -->
-            <div class="col mb-4">
                 <div class="card h-100 border-dark">
                     <div class="card-header bg-dark text-white fw-bold">
-                        <i class="bi bi-6-circle-fill me-2"></i>Step 6　購入完了・在庫確認
+                        <i class="bi bi-5-circle-fill me-2"></i>Step 5　購入完了
                     </div>
                     <div class="card-body">
-                        <p class="card-text">購入が完了すると、在庫数が減ります。データベースの変化を確認してみましょう！</p>
+                        <p class="card-text">「ご購入ありがとうございました」の画面と、買った商品の明細を表示します。</p>
                         <ul class="small text-muted">
                             <li>購入完了メッセージ</li>
-                            <li>購入した商品の明細</li>
-                            <li>在庫が減っているか確認</li>
+                            <li>購入した商品の明細・合計</li>
+                            <li>Step 2 で在庫が減ったか確認</li>
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <a href="/step6" class="btn btn-dark w-100">
-                            <i class="bi bi-bag-check me-1"></i>Step 6 へ進む
+                        <a href="/step5" class="btn btn-dark w-100">
+                            <i class="bi bi-bag-check me-1"></i>Step 5 へ進む
                         </a>
                     </div>
                 </div>

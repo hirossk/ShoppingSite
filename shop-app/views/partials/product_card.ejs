@@ -1,33 +1,46 @@
 <%
 // ============================================================
 //  商品カード（共通パーツ）
-//  ★このファイルを直すと、Step3・Step4・本番ショップ(/shop)・
-//    トップpage(/) の商品カードが「すべて同時に」変わります。
+//  ★このファイルを直すと、Step2・Step3・本番ショップ(/shop)・
+//    トップページ(/) の商品カードが「すべて同時に」変わります。
 //
 //  受け取る値：
-//    item      … 1つの商品（name / price / image / stock / code）
-//    showCart  … true なら「カートに入れる」ボタンを出す
-//    addUrl    … ボタンの行き先（例 '/cart/add' や '/shop/add'）
+//    item       … 1つの商品（name / price / image / stock / code）
+//    showCart   … true なら「カートに入れる」ボタンを出す
+//    addUrl     … カートボタンの行き先（例 '/cart/add' や '/shop/add'）
+//    showDetail … true なら「詳細」リンク（商品詳細ページ /item/番号）を出す
 // ============================================================
 %>
 <div class="col">
     <div class="card h-100 shadow-sm">
-        <!-- 商品画像（大きく表示） -->
+        <!-- 商品画像（詳細ページへのリンク付き） -->
+        <% if (showDetail) { %>
+        <a href="/item/<%= item.code %>">
+            <img class="card-img-top" src="/images/<%= item.image %>.png"
+                 alt="<%= item.name %>" style="height:180px; object-fit:contain; padding:8px;">
+        </a>
+        <% } else { %>
         <img class="card-img-top" src="/images/<%= item.image %>.png"
              alt="<%= item.name %>" style="height:180px; object-fit:contain; padding:8px;">
+        <% } %>
         <!-- 商品情報 -->
         <div class="card-body p-3 text-center">
             <h5 class="card-title fw-bold mb-1"><%= item.name %></h5>
             <p class="card-text text-primary fs-5 fw-bold mb-1">
                 ¥<%= item.price.toLocaleString() %>
             </p>
-            <p class="card-text small text-muted mb-0">
+            <p class="card-text small text-muted mb-1">
                 <% if (item.stock > 0) { %>
                 <span class="badge bg-success">在庫 <%= item.stock %> 個</span>
                 <% } else { %>
                 <span class="badge bg-danger">売り切れ</span>
                 <% } %>
             </p>
+            <% if (showDetail) { %>
+            <a href="/item/<%= item.code %>" class="small text-decoration-none">
+                <i class="bi bi-search me-1"></i>詳細を見る
+            </a>
+            <% } %>
         </div>
         <% if (showCart) { %>
         <!-- カートボタン（addUrl + 商品番号 にリンク） -->

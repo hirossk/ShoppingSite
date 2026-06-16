@@ -6,69 +6,36 @@
     <!-- Step ヘッダー -->
     <div class="d-flex align-items-center mb-3">
         <span class="badge bg-success fs-5 me-3">Step 2</span>
-        <h2 class="mb-0">一覧表示（テーブル）　<small class="text-muted fs-6">〜データベースの内容を表示しよう〜</small></h2>
+        <h2 class="mb-0">カード型で表示　<small class="text-muted fs-6">〜商品をおしゃれに並べて、詳細ページも作ろう〜</small></h2>
     </div>
 
     <div class="alert alert-success small">
         <i class="bi bi-info-circle me-1"></i>
-        <strong>ポイント：</strong> <code>itemlist.forEach</code> でDBから取得した全商品をループして表示しています。
-        <code>&lt;%= item.image %&gt;.png</code> で画像ファイル名を組み立てて <code>&lt;img&gt;</code> タグに渡しています。
+        <strong>ポイント：</strong> 商品カードの中身は共通パーツ
+        <code>views/partials/product_card.ejs</code> に書かれています。画像・商品名・価格・在庫を表示し、
+        「詳細を見る」を押すと <strong>商品詳細ページ（<code>/item/番号</code>）</strong>が開きます。
+        ここを直すと、この Step2 だけでなく <strong>本番ショップ(/shop) のカードも同時に変わります</strong>！
     </div>
 
-    <div class="card shadow-sm">
-        <div class="card-header bg-success text-white">
-            <i class="bi bi-table me-2"></i>商品一覧テーブル（<%= itemlist.length %> 件）
-        </div>
-        <div class="card-body p-0">
-            <% if (itemlist.length === 0) { %>
-            <p class="text-muted text-center p-4">
-                商品がまだありません。
-                <a href="/step1">Step 1</a> で商品を追加してください。
-            </p>
-            <% } else { %>
-            <table class="table table-striped table-hover mb-0">
-                <thead class="table-dark">
-                    <tr>
-                        <th scope="col">コード</th>
-                        <th scope="col">画像</th>
-                        <th scope="col">商品名</th>
-                        <th scope="col">価格</th>
-                        <th scope="col">在庫</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% itemlist.forEach(function(item) { %>
-                    <tr>
-                        <td><%= item.code %></td>
-                        <td>
-                            <!-- image列の値（例："guitar"）を使って画像を表示 -->
-                            <img src="/images/<%=  item.image %>.png"
-                                 width="80" height="64" alt="<%= item.name %>">
-                        </td>
-                        <td><%= item.name %></td>
-                        <td><%= item.price.toLocaleString() %>円</td>
-                        <td>
-                            <% if (item.stock > 0) { %>
-                            <span class="badge bg-success"><%= item.stock %> 個</span>
-                            <% } else { %>
-                            <span class="badge bg-danger">在庫なし</span>
-                            <% } %>
-                        </td>
-                    </tr>
-                    <% }) %>
-                </tbody>
-            </table>
-            <% } %>
-        </div>
+    <% if (itemlist.length === 0) { %>
+    <div class="text-center p-5 text-muted">
+        商品がまだありません。<a href="/step1">Step 1</a> で商品を追加してください。
     </div>
+    <% } else { %>
+    <div class="row gx-4 gy-4 row-cols-2 row-cols-md-3 row-cols-xl-4">
+        <% itemlist.forEach(function(item) { %>
+        <%- include('partials/product_card', { item: item, showCart: false, addUrl: '', showDetail: true }) %>
+        <% }) %>
+    </div>
+    <% } %>
 
     <!-- ナビ -->
     <div class="d-flex justify-content-between mt-4">
         <a href="/step1" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left me-1"></i>Step 1 データエントリー
+            <i class="bi bi-arrow-left me-1"></i>Step 1 商品登録
         </a>
-        <a href="/step3" class="btn btn-info text-white">
-            次へ：Step 3 カード表示 <i class="bi bi-arrow-right"></i>
+        <a href="/step3" class="btn btn-warning">
+            次へ：Step 3 カートに入れる <i class="bi bi-arrow-right"></i>
         </a>
     </div>
 

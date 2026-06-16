@@ -1,7 +1,7 @@
 <%- include('partials/header') %>
 
 <!-- ============================================================ -->
-<!--  購入完了・在庫確認 — 完成版のお店                          -->
+<!--  購入完了 — 完成版のお店                                    -->
 <!-- ============================================================ -->
 <section class="py-4">
 <div class="container mt-3">
@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <!-- 購入明細（共通パーツ：Step6 と同じものを使用） -->
+    <!-- 購入明細（共通パーツ：Step5 と同じものを使用） -->
     <%- include('partials/order_table', { order: order }) %>
     <% } else { %>
     <div class="alert alert-secondary">
@@ -24,16 +24,6 @@
         まだ購入していません。<a href="/shop">ショップ</a>から商品を選んでください。
     </div>
     <% } %>
-
-    <!-- 現在の在庫 -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-dark text-white">
-            <i class="bi bi-database me-2"></i>現在の在庫
-        </div>
-        <div class="card-body p-0">
-            <%- include('partials/stock_table', { itemlist: itemlist }) %>
-        </div>
-    </div>
 
     <!-- ナビ -->
     <div class="d-flex justify-content-between mt-4">
