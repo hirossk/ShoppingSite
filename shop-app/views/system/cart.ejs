@@ -32,19 +32,12 @@
     <!-- カート内容テーブル（共通パーツ：Step5 と同じものを使用） -->
     <%- include('../partials/cart_table', { cartlist: cartlist, total: total, removeUrl: '/cart/remove' }) %>
 
-    <!-- 購入ボタン -->
-    <div class="text-center">
-        <form action="/buy" method="POST">
-            <button type="submit" class="btn btn-danger btn-lg px-5"
-                    onclick="return confirm('合計 <%= total.toLocaleString() %>円 で購入しますか？')">
-                <i class="bi bi-bag-check me-2"></i>購入する（合計 <%= total.toLocaleString() %>円）
-            </button>
-        </form>
-        <div class="mt-2">
-            <a href="/shop" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i>買い物を続ける
-            </a>
-        </div>
+    <!-- 購入ボタン（共通パーツ：Step4 と同じものを使用） -->
+    <%- include('../partials/buy_button', { buyUrl: '/buy', total: total }) %>
+    <div class="text-center mt-2">
+        <a href="/shop" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>買い物を続ける
+        </a>
     </div>
 
     <% } %>

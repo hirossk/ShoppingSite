@@ -51,12 +51,15 @@
             <% } %>
         </div>
         <% if (showCart) { %>
-        <!-- カートボタン（addUrl + 商品番号 にリンク） -->
+        <!-- カートボタン（行き先 addUrl ＋ 商品番号 にリンク） -->
         <div class="card-footer bg-transparent border-top p-3 text-center">
             <% if (item.stock > 0) { %>
-            <!-- 【課題3 穴埋め】どの商品をカートに入れるかを伝える「商品番号」を入れよう。
-                 'dummy' を書きかえてね。  ヒント：商品番号は item.code -->
-            <a href="<%= addUrl %>/<%= 'dummy' %>" class="btn btn-primary w-100">
+            <!-- 【課題3-A 穴埋め】ボタンの「行き先」を入れよう。1つ目の 'dummy' を addUrl に書きかえてね。
+                 ヒント：カートに入れるURLは addUrl という箱に入っているよ（ページに合った行き先に自動でなる）。 -->
+            <!-- 【課題3-B 穴埋め】どの商品かを伝える「商品番号」を入れよう。2つ目の 'dummy' を item.code に。 -->
+            <!-- 【課題3-C 穴埋め】ボタンの色を決めよう。3つ目の 'dummy' を btn-primary に書きかえてね。
+                 ヒント：btn-primary=青 / btn-success=緑 / btn-danger=赤 / btn-warning=黄。好きな色でOK。 -->
+            <a href="<%= 'dummy' %>/<%= 'dummy' %>" class="btn <%= 'dummy' %> w-100">
                 <i class="bi bi-cart-plus me-1"></i>カートに入れる
             </a>
             <% } else { %>
