@@ -3,9 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>ショッピングサイトの作り方</title>
+    <title>ショッピングサイトを作ろう！</title>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <!-- Bootstrap icons-->
@@ -17,16 +15,34 @@
     <!-- Responsive navbar-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container px-1">
-            <a class="navbar-brand" href="/">ショッピングサイトを作ってみましょう</a>
+            <a class="navbar-brand" href="/">🛒 翔陽ストア</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/shop">ショップ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/cart">カートを見る</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/about">このサイトについて</a></li>
+                    <!-- 完成版のお店のメニュー -->
+                    <li class="nav-item"><a class="nav-link" href="/">🏠 Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/shop">🛍️ ショップ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/cart">🛒 カート</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/step1">⚙️ 商品管理</a></li>
+                    <!-- 授業用：制作ステップ（Step1〜6）への入口 -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="stepMenu" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">🎓 制作ステップ</a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="stepMenu">
+                            <li><a class="dropdown-item" href="/steps">ステップ一覧</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/step1">Step1 データ入力</a></li>
+                            <li><a class="dropdown-item" href="/step2">Step2 一覧表示</a></li>
+                            <li><a class="dropdown-item" href="/step3">Step3 カード表示</a></li>
+                            <li><a class="dropdown-item" href="/step4">Step4 ショップ</a></li>
+                            <li><a class="dropdown-item" href="/step5">Step5 カート</a></li>
+                            <li><a class="dropdown-item" href="/step6">Step6 購入完了</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>

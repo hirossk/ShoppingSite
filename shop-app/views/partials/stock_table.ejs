@@ -1,0 +1,46 @@
+<%
+// ============================================================
+//  在庫確認テーブル（共通パーツ）
+//  ★Step6・本番ショップの購入完了(/complete) が両方同時に変わります。
+//
+//  受け取る値：
+//    itemlist … 全商品の一覧（在庫数 stock を含む）
+// ============================================================
+%>
+<% if (itemlist.length === 0) { %>
+<p class="text-muted text-center p-4">商品がありません。</p>
+<% } else { %>
+<table class="table table-striped mb-0">
+    <thead class="table-dark">
+        <tr>
+            <th>コード</th>
+            <th>画像</th>
+            <th>商品名</th>
+            <th class="text-end">価格</th>
+            <th class="text-center">在庫</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% itemlist.forEach(function(item) { %>
+        <tr class="<%= item.stock === 0 ? 'table-danger' : '' %>">
+            <td><%= item.code %></td>
+            <td>
+                <img src="/images/<%= item.image %>.png"
+                     width="60" height="48" alt="<%= item.name %>">
+            </td>
+            <td><%= item.name %></td>
+            <td class="text-end"><%= item.price.toLocaleString() %>円</td>
+            <td class="text-center">
+                <% if (item.stock > 5) { %>
+                <span class="badge bg-success fs-6"><%= item.stock %> 個</span>
+                <% } else if (item.stock > 0) { %>
+                <span class="badge bg-warning text-dark fs-6">残り <%= item.stock %> 個</span>
+                <% } else { %>
+                <span class="badge bg-danger fs-6">売り切れ</span>
+                <% } %>
+            </td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+<% } %>

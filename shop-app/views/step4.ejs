@@ -1,0 +1,45 @@
+<%- include('partials/header') %>
+
+<section class="py-4">
+<div class="container mt-4">
+
+    <!-- Step ヘッダー -->
+    <div class="d-flex align-items-center mb-3">
+        <span class="badge bg-warning fs-5 me-3">Step 4</span>
+        <h2 class="mb-0">ショップ　<small class="text-muted fs-6">〜カートに入れてみよう〜</small></h2>
+    </div>
+
+    <div class="alert alert-warning small">
+        <i class="bi bi-info-circle me-1"></i>
+        <strong>ポイント：</strong> Step3 と同じ共通パーツ
+        <code>views/partials/product_card.ejs</code> を、今度は「カートに入れる」ボタン付き
+        （<code>showCart: true</code>）で表示しています。ボタンを押すと <code>/cart/add/コード番号</code>
+        にアクセスして、データベースの <code>cart</code> テーブルに追加されます。
+    </div>
+
+    <% if (itemlist.length === 0) { %>
+    <div class="text-center p-5 text-muted">
+        商品がまだありません。<a href="/step1">Step 1</a> で商品を追加してください。
+    </div>
+    <% } else { %>
+    <div class="row gx-4 gy-4 row-cols-2 row-cols-md-3 row-cols-xl-4">
+        <% itemlist.forEach(function(item) { %>
+        <%- include('partials/product_card', { item: item, showCart: true, addUrl: '/cart/add' }) %>
+        <% }) %>
+    </div>
+    <% } %>
+
+    <!-- ナビ -->
+    <div class="d-flex justify-content-between mt-4">
+        <a href="/step3" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Step 3 カード表示
+        </a>
+        <a href="/step5" class="btn btn-danger">
+            次へ：Step 5 カート確認 <i class="bi bi-arrow-right"></i>
+        </a>
+    </div>
+
+</div>
+</section>
+
+<%- include('partials/footer') %>

@@ -1,35 +1,31 @@
 <%- include('partials/header') %>
 
-<!-- Page Content-->
-<section class="py-5">
-    <div class="container px-4 px-lg-5 mt-5">
-        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-            <% itemlist.forEach(function(item) { %>
-            <div class="col mb-5">
-                <div class="card h-100">
-                    <!-- Product image-->
-                    <img class="card-img-top" src="/images/<%= item.image %>.png" alt="<%= item.image %>" />
-                    <!-- Product details-->
-                    <div class="card-body p-4"></div>
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center">
-                            <!-- Product name-->
-                            <h5 class="fw-bolder"><%= item.name %></h5>
-                            <!-- Product price-->
-                            <p><%= item.price %>円</p>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="text-center">
-                            <a class="btn btn-outline-dark mt-auto" href="/cart/<%= item.code %>">
-                                カートに入れる
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <% }) %>
-        </div>
+<!-- ============================================================ -->
+<!--  ショップ（商品一覧）— 完成版のお店                          -->
+<!-- ============================================================ -->
+<section class="py-4">
+<div class="container mt-3">
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2 class="mb-0"><i class="bi bi-shop me-2"></i>商品一覧</h2>
+        <a href="/cart" class="btn btn-outline-danger">
+            <i class="bi bi-cart me-1"></i>カートを見る
+        </a>
     </div>
+
+    <% if (itemlist.length === 0) { %>
+    <div class="text-center p-5 text-muted">
+        商品がまだありません。
+    </div>
+    <% } else { %>
+    <div class="row gx-4 gy-4 row-cols-2 row-cols-md-3 row-cols-xl-4">
+        <% itemlist.forEach(function(item) { %>
+        <%- include('partials/product_card', { item: item, showCart: true, addUrl: '/shop/add' }) %>
+        <% }) %>
+    </div>
+    <% } %>
+
+</div>
 </section>
 
 <%- include('partials/footer') %>

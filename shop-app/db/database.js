@@ -5,6 +5,7 @@
 const path = require('path');
 const fs   = require('fs');
 const initSqlJs = require('sql.js');
+const { insertSeedData } = require('./seed');
 
 // DBファイルのパス（shop-appフォルダの直下）
 const DB_PATH = path.join(__dirname, '..', 'shop.db');
@@ -18,25 +19,42 @@ function saveDb() {
 }
 
 // DB初期化（起動時に1回呼ぶ）
-async function initDb() {
+// forceReset=true のとき既存DBを削除して作り直す（run.bat --initdb 用）
+async function initDb(forceReset = false) {
     const SQL = await initSqlJs();
 
-    if (fs.existsSync(DB_PATH)) {
+    if (!forceReset && fs.existsSync(DB_PATH)) {
         // 既存DBをメモリにロード
         const fileBuffer = fs.readFileSync(DB_PATH);
         db = new SQL.Database(fileBuffer);
+
+        // stockカラムが無ければ追加（既存DBへの対応）
+        try {
+            db.run('ALTER TABLE item ADD COLUMN stock INTEGER DEFAULT 10');
+            db.run('UPDATE item SET stock = 10 WHERE stock IS NULL');
+            saveDb();
+            console.log('stockカラムを追加しました');
+        } catch (e) {
+            // すでにある場合は無視
+        }
         console.log('既存のDBを読み込みました: ' + DB_PATH);
     } else {
-        // 新規DB作成
+        // 新規DB作成（または --initdb によるリセット）
+        if (forceReset && fs.existsSync(DB_PATH)) {
+            fs.unlinkSync(DB_PATH);
+            console.log('既存のDBを削除しました（リセット）');
+        }
+
         db = new SQL.Database();
 
-        // テーブル作成
+        // テーブル作成（stockカラム付き）
         db.run(`
             CREATE TABLE IF NOT EXISTS item (
                 code  INTEGER PRIMARY KEY AUTOINCREMENT,
-                name  TEXT,
-                price INTEGER,
-                image TEXT
+                name  TEXT    NOT NULL,
+                price INTEGER NOT NULL,
+                image TEXT    NOT NULL,
+                stock INTEGER NOT NULL DEFAULT 10
             )
         `);
         db.run(`
@@ -46,10 +64,8 @@ async function initDb() {
             )
         `);
 
-        // 初期データ投入
-        db.run(`INSERT INTO item (code, name, price, image) VALUES (1, 'ギター',        30000,  'guitar')`);
-        db.run(`INSERT INTO item (code, name, price, image) VALUES (2, 'ミディキーボード', 48000, 'midi')`);
-        db.run(`INSERT INTO item (code, name, price, image) VALUES (3, 'エレクトーン',   300000, 'electone')`);
+        // 初期データ投入（db/seed.js から読み込む）
+        insertSeedData(db);
 
         saveDb();
         console.log('新規DBを作成しました: ' + DB_PATH);
@@ -58,9 +74,9 @@ async function initDb() {
 
 // ---- ITEM テーブル操作 ----
 
-// 全商品取得
+// 全商品取得（在庫付き）
 function findAllItems() {
-    const stmt = db.prepare('SELECT code, name, price, image FROM item ORDER BY code');
+    const stmt = db.prepare('SELECT code, name, price, image, stock FROM item ORDER BY code');
     const rows = [];
     while (stmt.step()) {
         rows.push(stmt.getAsObject());
@@ -69,13 +85,29 @@ function findAllItems() {
     return rows;
 }
 
+// 商品を1件追加（Step1のデータエントリー）
+function addItem(name, price, image) {
+    db.run(
+        'INSERT INTO item (name, price, image, stock) VALUES (?, ?, ?, 10)',
+        [name, price, image]
+    );
+    saveDb();
+}
+
+// 商品を1件削除
+function deleteItem(code) {
+    db.run('DELETE FROM item WHERE code = ?', [code]);
+    db.run('DELETE FROM cart WHERE code = ?', [code]);
+    saveDb();
+}
+
 // ---- CART テーブル操作 ----
 
 // カートの商品とITEM情報をJOINして取得
 function findItemInCart() {
     const stmt = db.prepare(`
         SELECT item.code AS code, item.name AS name, cart.count AS count,
-               item.price AS price, item.image AS image
+               item.price AS price, item.image AS image, item.stock AS stock
         FROM item
         INNER JOIN cart ON (item.code = cart.code)
         ORDER BY item.code
@@ -120,10 +152,60 @@ function removeFromCart(code) {
     saveDb();
 }
 
+// カートを空にする
+function clearCart() {
+    db.run('DELETE FROM cart');
+    saveDb();
+}
+
+// 購入処理：在庫を減らしてカートを空にする
+// 戻り値: { success: true, items } または { success: false, message }
+function purchase() {
+    const cartItems = findItemInCart();
+
+    if (cartItems.length === 0) {
+        return { success: false, message: 'カートが空です' };
+    }
+
+    // 在庫チェック
+    for (const item of cartItems) {
+        if (item.stock < item.count) {
+            return {
+                success: false,
+                message: `「${item.name}」の在庫が足りません（在庫: ${item.stock}個）`
+            };
+        }
+    }
+
+    // 在庫を減らす
+    for (const item of cartItems) {
+        db.run(
+            'UPDATE item SET stock = stock - ? WHERE code = ?',
+            [item.count, item.code]
+        );
+    }
+
+    // カートを空にする
+    db.run('DELETE FROM cart');
+    saveDb();
+
+    return { success: true, items: cartItems };
+}
+
+// カートの合計金額を計算
+function calcCartTotal(cartItems) {
+    return cartItems.reduce((sum, item) => sum + item.price * item.count, 0);
+}
+
 module.exports = {
     initDb,
     findAllItems,
+    addItem,
+    deleteItem,
     findItemInCart,
     addToCart,
     removeFromCart,
+    clearCart,
+    purchase,
+    calcCartTotal,
 };

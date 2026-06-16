@@ -43,7 +43,10 @@ app.use((err, req, res, next) => {
 });
 
 // ---- サーバー起動（DB初期化後に起動） ----
-db.initDb().then(() => {
+const forceReset = process.argv.includes('--initdb');
+if (forceReset) console.log('--initdb フラグを検出：DBをリセットします');
+
+db.initDb(forceReset).then(() => {
     app.listen(PORT, () => {
         console.log('==========================================');
         console.log('ショッピングサイトが起動しました！');
