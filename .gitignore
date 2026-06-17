@@ -43,6 +43,13 @@ shop-app/.env
 shop-app/shop.db
 shop-app/vscode/
 
+### Node.js / shop-app ###
+register/node_modules/
+register/node/
+register/.env
+register/shop.db
+register/vscode/
+
 ### portable-dev ###
 portable-dev/node.zip
 portable-dev/node-*/
