@@ -14,7 +14,7 @@ const initSqlJs = require('sql.js');
 const { insertSeedData } = require('./seed');
 
 // DBファイルのパス（shop-appフォルダの直下）
-const DB_PATH = path.join(__dirname, '..', 'shop.db');
+const DB_PATH = path.join(__dirname, '..', 'sales.db');
 
 let db = null; // sql.jsのDBインスタンス（メモリ上に展開）
 

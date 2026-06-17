@@ -6,7 +6,23 @@ require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const path    = require('path');
+const os      = require('os');
 const db      = require('./db/database');
+
+// このPCのLAN内IPアドレス（IPv4）を取得する。
+// 同じWi-Fi/LANにつないだスマホ・タブレットからこのアドレスで接続できる。
+// 見つからなければ localhost を返す。
+function getLocalIps() {
+    const ips = [];
+    const nets = os.networkInterfaces();
+    for (const name of Object.keys(nets)) {
+        for (const net of nets[name] || []) {
+            // IPv4 で、自分自身(127.0.0.1)以外のものだけ集める
+            if (net.family === 'IPv4' && !net.internal) ips.push(net.address);
+        }
+    }
+    return ips.length ? ips : ['localhost'];
+}
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -48,11 +64,14 @@ const forceReset = process.argv.includes('--initdb');
 if (forceReset) console.log('--initdb フラグを検出：DBをリセットします');
 
 db.initDb(forceReset).then(() => {
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0',() => {
+        const ips = getLocalIps();
         console.log('==========================================');
-        console.log('ショッピングサイトが起動しました！');
-        console.log('ブラウザで以下のURLを開いてください:');
+        console.log('レジが起動しました！');
+        console.log('このPCのブラウザはこちら:');
         console.log('  http://localhost:' + PORT);
+        console.log('同じネットワークのスマホ・他のPCからは:');
+        ips.forEach(ip => console.log('  http://' + ip + ':' + PORT));
         console.log('==========================================');
     });
 }).catch(err => {
