@@ -21,8 +21,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // POSTリクエストのボディをパース（@RequestBody に相当）
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// 画像（70x70 の data URL）も送られてくるので少し余裕を持たせる
+app.use(express.json({ limit: '2mb' }));
+app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 
 // セッション管理（Spring Security の代替）
 app.use(session({

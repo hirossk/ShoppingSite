@@ -1,0 +1,345 @@
+<%- include('partials/header') %>
+
+<!-- ============================================================ -->
+<!--  商品・在庫の管理                                              -->
+<!-- ============================================================ -->
+<section class="py-4">
+<div class="container">
+
+    <h2 class="mb-4"><i class="bi bi-gear-fill me-2"></i>商品・在庫の管理</h2>
+
+    <!-- メッセージ -->
+    <% var msgs = {
+        added:   ['success', '商品を登録しました'],
+        updated: ['success', '商品の内容を更新しました'],
+        stocked: ['success', '在庫を補充しました'],
+        stockset:['success', '在庫の数を直しました'],
+        priceset:['success', '値段を変えました'],
+        settings:['success', 'レジの設定を保存しました'],
+        moved:   ['success', '並び順を変えました'],
+        deleted: ['secondary','商品を削除しました'],
+        error_name:  ['danger', '商品名を入力してください'],
+        error_price: ['danger', '価格は0以上の数字で入力してください'],
+        error_edit:  ['danger', '入力内容を確認してください'],
+    }; var m = msgs[message]; %>
+    <% if (m) { %>
+    <div class="alert alert-<%= m[0] %>"><%= m[1] %></div>
+    <% } %>
+
+    <!-- レジの設定（ボタンのカスタマイズ） -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-secondary text-white">
+            <i class="bi bi-sliders me-2"></i>レジのボタン設定
+        </div>
+        <div class="card-body">
+            <form action="/kanri/settings" method="POST">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-2 col-6">
+                        <label class="form-label small mb-0">クイック入金①</label>
+                        <input type="number" name="quick1" class="form-control" value="<%= settings.quick1 %>" min="1" step="1" required>
+                    </div>
+                    <div class="col-md-2 col-6">
+                        <label class="form-label small mb-0">クイック入金②</label>
+                        <input type="number" name="quick2" class="form-control" value="<%= settings.quick2 %>" min="1" step="1" required>
+                    </div>
+                    <div class="col-md-2 col-6">
+                        <label class="form-label small mb-0">クイック入金③</label>
+                        <input type="number" name="quick3" class="form-control" value="<%= settings.quick3 %>" min="1" step="1" required>
+                    </div>
+                    <div class="col-md-2 col-6">
+                        <label class="form-label small mb-0">1行に並べる数</label>
+                        <select name="cols" class="form-select">
+                            <% [2,3,4,5,6].forEach(function(n){ %>
+                            <option value="<%= n %>" <%= settings.cols === n ? 'selected' : '' %>><%= n %> 個</option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="col-md-2 col-6">
+                        <label class="form-label small mb-0">ボタンの大きさ</label>
+                        <select name="btn_height" class="form-select">
+                            <% [['小',90],['中',120],['大',150],['特大',190]].forEach(function(o){ %>
+                            <option value="<%= o[1] %>" <%= settings.btn_height === o[1] ? 'selected' : '' %>><%= o[0] %>（<%= o[1] %>px）</option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="col-md-2 col-12">
+                        <button type="submit" class="btn btn-secondary w-100">
+                            <i class="bi bi-check-lg me-1"></i>設定を保存
+                        </button>
+                    </div>
+                </div>
+                <div class="form-text mt-2">
+                    クイック入金は、レジの「お預かり」を一発で足すボタン（「ちょうど」の隣の3つ）の金額です。
+                    商品ボタンの並び順は、下の一覧の <i class="bi bi-arrow-up"></i>/<i class="bi bi-arrow-down"></i> で変えられます。
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 新規登録フォーム -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <i class="bi bi-plus-circle me-2"></i>新しい商品を登録
+        </div>
+        <div class="card-body">
+            <form action="/kanri/add" method="POST">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label">商品名</label>
+                        <input type="text" name="name" class="form-control" placeholder="例：クレープ" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">価格（円）</label>
+                        <input type="number" name="price" class="form-control" placeholder="例：300" min="0" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">初期在庫（個）</label>
+                        <input type="number" name="stock" class="form-control" placeholder="例：50" min="0" value="0">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-plus-lg me-1"></i>登録
+                        </button>
+                    </div>
+                </div>
+                <div class="row g-3 mt-0">
+                    <div class="col-md-7">
+                        <label class="form-label d-block">ボタンの色</label>
+                        <div class="d-flex align-items-center flex-wrap gap-1">
+                            <% colors.forEach(function(c) { %>
+                            <button type="button" class="btn p-0 border swatch"
+                                    data-target="addColorInput" data-color="<%= c %>"
+                                    style="width:38px; height:38px; background-color:<%= c %>; border-radius:6px;"></button>
+                            <% }) %>
+                            <input type="color" class="form-control form-control-color ms-1" style="width:48px; height:38px;"
+                                   id="addColorInput" name="color" value="<%= colors[0] %>" title="色を自由に選ぶ">
+                        </div>
+                        <div class="form-text">パレットから選ぶか、右の四角で自由な色を選べます</div>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label d-block">商品の画像（任意）</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <img id="addPreview" src="" alt="" class="border rounded bg-light"
+                                 style="width:70px; height:70px; object-fit:cover; display:none;">
+                            <div class="flex-grow-1">
+                                <input type="file" accept="image/*"
+                                       class="form-control form-control-sm item-img-file"
+                                       data-target="addImage" data-preview="addPreview">
+                                <div class="form-text">選ぶと自動で 70×70 に縮小されます</div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="image" id="addImage">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 登録済みの商品 -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <i class="bi bi-box-seam me-2"></i>登録済みの商品（<%= items.length %> 件）
+        </div>
+        <div class="card-body p-0">
+            <% if (items.length === 0) { %>
+            <p class="text-center text-muted p-4 m-0">まだ商品がありません。上のフォームから登録してください。</p>
+            <% } else { %>
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width:56px;"></th>
+                        <th>商品名</th>
+                        <th class="text-end">価格</th>
+                        <th class="text-center" style="width:210px;">値段を直す</th>
+                        <th class="text-center">在庫</th>
+                        <th class="text-center" style="width:230px;">在庫を補充</th>
+                        <th class="text-center" style="width:170px;">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% items.forEach(function(item, idx) { %>
+                    <tr>
+                        <td>
+                            <% if (item.image) { %>
+                            <img src="<%= item.image %>" alt="<%= item.name %>" class="rounded border"
+                                 style="width:44px; height:44px; object-fit:cover;">
+                            <% } else { %>
+                            <span class="d-inline-block rounded" style="width:24px; height:24px; background-color:<%= item.color %>;"></span>
+                            <% } %>
+                        </td>
+                        <td class="fw-bold"><%= item.name %></td>
+                        <td class="text-end">¥<%= item.price.toLocaleString() %></td>
+                        <td class="text-center">
+                            <form action="/kanri/price" method="POST" class="d-flex gap-1 justify-content-center">
+                                <input type="hidden" name="code" value="<%= item.code %>">
+                                <input type="number" name="price" class="form-control form-control-sm" style="width:90px;" value="<%= item.price %>" min="0" required>
+                                <button class="btn btn-sm btn-warning"><i class="bi bi-tag"></i>変更</button>
+                            </form>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge fs-6 <%= item.stock > 0 ? 'bg-success' : 'bg-danger' %>">
+                                <%= item.stock %> 個
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <form action="/kanri/stock/add" method="POST" class="d-flex gap-1 justify-content-center">
+                                <input type="hidden" name="code" value="<%= item.code %>">
+                                <input type="number" name="amount" class="form-control form-control-sm" style="width:80px;" value="10">
+                                <button class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i>補充</button>
+                            </form>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group me-1" role="group" aria-label="並び替え">
+                                <form action="/kanri/move" method="POST" class="d-inline">
+                                    <input type="hidden" name="code" value="<%= item.code %>">
+                                    <input type="hidden" name="dir" value="up">
+                                    <button class="btn btn-sm btn-outline-secondary" title="前へ" <%= idx === 0 ? 'disabled' : '' %>><i class="bi bi-arrow-up"></i></button>
+                                </form>
+                                <form action="/kanri/move" method="POST" class="d-inline">
+                                    <input type="hidden" name="code" value="<%= item.code %>">
+                                    <input type="hidden" name="dir" value="down">
+                                    <button class="btn btn-sm btn-outline-secondary" title="後ろへ" <%= idx === items.length - 1 ? 'disabled' : '' %>><i class="bi bi-arrow-down"></i></button>
+                                </form>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#edit<%= item.code %>">
+                                <i class="bi bi-pencil"></i>編集
+                            </button>
+                            <form action="/kanri/delete" method="POST" class="d-inline">
+                                <input type="hidden" name="code" value="<%= item.code %>">
+                                <button class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('<%= item.name %> を削除しますか？')">
+                                    <i class="bi bi-trash"></i>削除
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    <!-- 編集（折りたたみ） -->
+                    <tr class="collapse" id="edit<%= item.code %>">
+                        <td colspan="7" class="bg-light">
+                            <div class="row g-3">
+                                <!-- 内容を更新 -->
+                                <div class="col-lg-8">
+                                    <form action="/kanri/update" method="POST" class="row g-2 align-items-end">
+                                        <input type="hidden" name="code" value="<%= item.code %>">
+                                        <div class="col-sm-5">
+                                            <label class="form-label small mb-0">商品名</label>
+                                            <input type="text" name="name" class="form-control form-control-sm" value="<%= item.name %>" required>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="form-label small mb-0">価格</label>
+                                            <input type="number" name="price" class="form-control form-control-sm" value="<%= item.price %>" min="0" required>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="form-label small mb-0 d-block">色</label>
+                                            <div class="d-flex align-items-center flex-wrap gap-1">
+                                                <% colors.forEach(function(c) { %>
+                                                <button type="button" class="btn p-0 border swatch"
+                                                        data-target="editColorInput<%= item.code %>" data-color="<%= c %>"
+                                                        style="width:26px; height:26px; background-color:<%= c %>; border-radius:5px;"></button>
+                                                <% }) %>
+                                                <input type="color" class="form-control form-control-color ms-1" style="width:40px; height:30px;"
+                                                       id="editColorInput<%= item.code %>" name="color" value="<%= item.color %>" title="色を自由に選ぶ">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label small mb-0 d-block">画像</label>
+                                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                                <img src="<%= item.image || '' %>" alt=""
+                                                     class="border rounded bg-light" id="editPreview<%= item.code %>"
+                                                     style="width:50px; height:50px; object-fit:cover; <%= item.image ? '' : 'display:none;' %>">
+                                                <input type="file" accept="image/*"
+                                                       class="form-control form-control-sm item-img-file" style="max-width:220px;"
+                                                       data-target="editImage<%= item.code %>" data-preview="editPreview<%= item.code %>">
+                                                <% if (item.image) { %>
+                                                <div class="form-check ms-1">
+                                                    <input class="form-check-input" type="checkbox" name="removeImage" value="1" id="rm<%= item.code %>">
+                                                    <label class="form-check-label small" for="rm<%= item.code %>">画像を消す</label>
+                                                </div>
+                                                <% } %>
+                                            </div>
+                                            <input type="hidden" name="image" id="editImage<%= item.code %>">
+                                        </div>
+                                        <div class="col-12">
+                                            <button class="btn btn-sm btn-primary"><i class="bi bi-check-lg me-1"></i>内容を更新</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- 在庫を直す -->
+                                <div class="col-lg-4 border-start">
+                                    <form action="/kanri/stock/set" method="POST" class="row g-2 align-items-end">
+                                        <input type="hidden" name="code" value="<%= item.code %>">
+                                        <div class="col-7">
+                                            <label class="form-label small mb-0">在庫の数を直す</label>
+                                            <input type="number" name="stock" class="form-control form-control-sm" value="<%= item.stock %>" min="0">
+                                        </div>
+                                        <div class="col-5">
+                                            <button class="btn btn-sm btn-outline-secondary w-100">直す</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+            <% } %>
+        </div>
+    </div>
+
+</div>
+</section>
+
+<script>
+// 商品画像を選ぶと、ブラウザ側で 70x70 に縮小して hidden input に入れる。
+// （サーバーは受け取った画像を public/images に保存する）
+(function () {
+    var SIZE = 70;
+
+    // ファイル → 70x70 の data URL（中央を正方形に切り出す＝object-fit:cover 相当）
+    function resizeToDataUrl(file, cb) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var img = new Image();
+            img.onload = function () {
+                var canvas = document.createElement('canvas');
+                canvas.width = SIZE;
+                canvas.height = SIZE;
+                var ctx = canvas.getContext('2d');
+                var s  = Math.min(img.width, img.height);
+                var sx = (img.width  - s) / 2;
+                var sy = (img.height - s) / 2;
+                ctx.drawImage(img, sx, sy, s, s, 0, 0, SIZE, SIZE);
+                cb(canvas.toDataURL('image/png'));
+            };
+            img.onerror = function () { alert('画像を読み込めませんでした'); };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // 色パレットの四角を押すと、その色をカラーピッカー（name="color"）に入れる
+    document.querySelectorAll('.swatch').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var input = document.getElementById(btn.getAttribute('data-target'));
+            if (input) input.value = btn.getAttribute('data-color');
+        });
+    });
+
+    document.querySelectorAll('.item-img-file').forEach(function (input) {
+        input.addEventListener('change', function () {
+            var file = input.files && input.files[0];
+            if (!file) return;
+            var hidden  = document.getElementById(input.getAttribute('data-target'));
+            var preview = document.getElementById(input.getAttribute('data-preview'));
+            resizeToDataUrl(file, function (dataUrl) {
+                if (hidden) hidden.value = dataUrl;
+                if (preview) { preview.src = dataUrl; preview.style.display = ''; }
+            });
+        });
+    });
+})();
+</script>
+
+<%- include('partials/footer') %>

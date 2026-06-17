@@ -1,0 +1,256 @@
+<%- include('partials/header') %>
+
+<!-- ============================================================ -->
+<!--  レジ画面（学校祭POS）                                        -->
+<!--   左：商品ボタン　／　右：会計中のカゴ・お預かり・おつり        -->
+<!-- ============================================================ -->
+<section class="py-4">
+<div class="container-fluid px-3 px-lg-4">
+
+    <% if (errorMsg) { %>
+    <div class="alert alert-danger d-flex align-items-center" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i><%= errorMsg %>
+    </div>
+    <% } %>
+
+    <div class="row g-4">
+
+        <!-- ============ 左：商品ボタン ============ -->
+        <div class="col-lg-7 col-xl-8">
+            <h4 class="mb-3"><i class="bi bi-grid-3x3-gap-fill me-2"></i>商品をえらぶ</h4>
+
+            <% if (items.length === 0) { %>
+            <div class="card shadow-sm">
+                <div class="card-body text-center p-5 text-muted">
+                    商品がまだ登録されていません。<br>
+                    <a href="/kanri" class="btn btn-primary mt-3">
+                        <i class="bi bi-gear me-1"></i>商品管理で登録する
+                    </a>
+                </div>
+            </div>
+            <% } else { %>
+            <div class="row g-3 row-cols-2 row-cols-md-<%= settings.cols %>">
+                <% items.forEach(function(item) { %>
+                <div class="col">
+                    <% if (item.stock > 0) { %>
+                    <form action="/regi/add/<%= item.code %>" method="POST">
+                        <button type="submit"
+                                class="btn w-100 h-100 p-3 text-white shadow-sm text-center"
+                                style="background-color: <%= item.color %>; min-height:<%= settings.btn_height %>px;">
+                            <% if (item.image) { %>
+                            <img src="<%= item.image %>" alt="" class="rounded bg-white mb-1"
+                                 style="width:70px; height:70px; object-fit:cover;">
+                            <% } %>
+                            <div class="fs-5 fw-bold mb-1"><%= item.name %></div>
+                            <div class="fs-5">¥<%= item.price.toLocaleString() %></div>
+                            <div class="small mt-1 opacity-75">残り <%= item.stock %> 個</div>
+                        </button>
+                    </form>
+                    <% } else { %>
+                    <button type="button" class="btn btn-secondary w-100 h-100 p-3 shadow-sm" disabled
+                            style="min-height:<%= settings.btn_height %>px;">
+                        <% if (item.image) { %>
+                        <img src="<%= item.image %>" alt="" class="rounded bg-white mb-1 opacity-50"
+                             style="width:70px; height:70px; object-fit:cover;">
+                        <% } %>
+                        <div class="fs-5 fw-bold mb-1"><%= item.name %></div>
+                        <div class="fs-5">¥<%= item.price.toLocaleString() %></div>
+                        <div class="small mt-1"><i class="bi bi-x-circle me-1"></i>売り切れ</div>
+                    </button>
+                    <% } %>
+                </div>
+                <% }) %>
+            </div>
+            <% } %>
+        </div>
+
+        <!-- ============ 右：会計パネル ============ -->
+        <div class="col-lg-5 col-xl-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                    <span class="fs-5"><i class="bi bi-receipt me-2"></i>会計中</span>
+                    <% if (cartlist.length > 0) { %>
+                    <form action="/regi/clear" method="POST" class="m-0">
+                        <button class="btn btn-sm btn-outline-light"
+                                onclick="return confirm('カゴを空にしますか？')">
+                            <i class="bi bi-trash me-1"></i>全部取消
+                        </button>
+                    </form>
+                    <% } %>
+                </div>
+
+                <!-- 会計中のカゴ -->
+                <div class="card-body p-0">
+                    <% if (cartlist.length === 0) { %>
+                    <p class="text-center text-muted p-4 m-0">
+                        商品ボタンを押すとここに入ります
+                    </p>
+                    <% } else { %>
+                    <table class="table table-hover mb-0 align-middle">
+                        <tbody>
+                            <% cartlist.forEach(function(c) { %>
+                            <tr>
+                                <td>
+                                    <div class="fw-bold"><%= c.name %></div>
+                                    <div class="small text-muted">¥<%= c.price.toLocaleString() %></div>
+                                </td>
+                                <td class="text-center" style="white-space:nowrap;">
+                                    <form action="/regi/dec/<%= c.code %>" method="POST" class="d-inline">
+                                        <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-dash-lg"></i></button>
+                                    </form>
+                                    <span class="fw-bold fs-5 mx-2"><%= c.count %></span>
+                                    <form action="/regi/inc/<%= c.code %>" method="POST" class="d-inline">
+                                        <button class="btn btn-sm btn-outline-secondary"
+                                                <%= c.count >= c.stock ? 'disabled' : '' %>><i class="bi bi-plus-lg"></i></button>
+                                    </form>
+                                </td>
+                                <td class="text-end fw-bold" style="white-space:nowrap;">
+                                    ¥<%= (c.price * c.count).toLocaleString() %>
+                                </td>
+                                <td class="text-end">
+                                    <form action="/regi/remove/<%= c.code %>" method="POST" class="m-0">
+                                        <button class="btn btn-sm btn-outline-danger"><i class="bi bi-x-lg"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                    <% } %>
+                </div>
+
+                <!-- 合計・お預かり・おつり -->
+                <div class="card-footer bg-light p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="fs-5">合計</span>
+                        <span class="fs-2 fw-bold text-danger">¥<span id="total"><%= total.toLocaleString() %></span></span>
+                    </div>
+
+                    <!-- お預かり表示 -->
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="fs-6 text-muted">お預かり</span>
+                        <span class="fs-3 fw-bold">¥<span id="paidView">0</span></span>
+                    </div>
+                    <!-- おつり表示 -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="fs-6 text-muted">おつり</span>
+                        <span class="fs-3 fw-bold text-success" id="changeView">¥0</span>
+                    </div>
+
+                    <!-- 入金テンキー（マウスでもキーボードでも入力可） -->
+                    <form action="/regi/checkout" method="POST" id="checkoutForm">
+                        <input type="hidden" name="paid" id="paid" value="0">
+
+                        <!-- クイック入金ボタン -->
+                        <div class="row g-2 mb-2">
+                            <div class="col"><button type="button" class="btn btn-outline-primary w-100 quick" data-amount="exact">ちょうど</button></div>
+                            <div class="col"><button type="button" class="btn btn-outline-primary w-100 quick" data-amount="<%= settings.quick1 %>">+<%= settings.quick1.toLocaleString() %></button></div>
+                            <div class="col"><button type="button" class="btn btn-outline-primary w-100 quick" data-amount="<%= settings.quick2 %>">+<%= settings.quick2.toLocaleString() %></button></div>
+                            <div class="col"><button type="button" class="btn btn-outline-primary w-100 quick" data-amount="<%= settings.quick3 %>">+<%= settings.quick3.toLocaleString() %></button></div>
+                        </div>
+
+                        <!-- テンキー -->
+                        <div class="row g-2" id="keypad">
+                            <% [['7','8','9'],['4','5','6'],['1','2','3']].forEach(function(rowKeys){ %>
+                            <% rowKeys.forEach(function(k){ %>
+                            <div class="col-4"><button type="button" class="btn btn-light border w-100 py-3 fs-4 key" data-key="<%= k %>"><%= k %></button></div>
+                            <% }) %>
+                            <% }) %>
+                            <div class="col-4"><button type="button" class="btn btn-light border w-100 py-3 fs-4 key" data-key="00">00</button></div>
+                            <div class="col-4"><button type="button" class="btn btn-light border w-100 py-3 fs-4 key" data-key="0">0</button></div>
+                            <div class="col-4"><button type="button" class="btn btn-warning border w-100 py-3 fs-5" id="clearKey"><i class="bi bi-backspace"></i> C</button></div>
+                        </div>
+
+                        <!-- 会計ボタン -->
+                        <button type="submit" class="btn btn-danger btn-lg w-100 mt-3 py-3 fs-4" id="payBtn" disabled>
+                            <i class="bi bi-cash-coin me-2"></i>会計する
+                        </button>
+                    </form>
+                    <p class="text-center text-muted small mt-2 mb-0" id="hintText"></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</section>
+
+<script>
+(function () {
+    var total      = <%= total %>;
+    var paid       = 0;
+    var paidEl     = document.getElementById('paid');
+    var paidView   = document.getElementById('paidView');
+    var changeView = document.getElementById('changeView');
+    var payBtn     = document.getElementById('payBtn');
+    var hintText   = document.getElementById('hintText');
+
+    function yen(n) { return '¥' + n.toLocaleString(); }
+
+    function render() {
+        if (paidEl) paidEl.value = paid;
+        paidView.textContent = paid.toLocaleString();
+        var change = paid - total;
+        if (total === 0) {
+            changeView.textContent = yen(0);
+            changeView.className = 'fs-3 fw-bold text-muted';
+            payBtn.disabled = true;
+            hintText.textContent = '商品を選んでください';
+        } else if (paid < total) {
+            changeView.textContent = '不足 ' + yen(total - paid);
+            changeView.className = 'fs-3 fw-bold text-danger';
+            payBtn.disabled = true;
+            hintText.textContent = 'お預かりが ' + yen(total - paid) + ' 足りません';
+        } else {
+            changeView.textContent = yen(change);
+            changeView.className = 'fs-3 fw-bold text-success';
+            payBtn.disabled = false;
+            hintText.textContent = 'Enter キーでも会計できます';
+        }
+    }
+
+    function pressDigit(d) {
+        // 999万円で頭打ち（入力ミス対策）
+        var next = String(paid === 0 ? '' : paid) + d;
+        var num = parseInt(next, 10);
+        if (isNaN(num)) num = 0;
+        if (num > 9999999) return;
+        paid = num;
+        render();
+    }
+
+    // テンキー（マウス・タッチ）
+    document.querySelectorAll('.key').forEach(function (b) {
+        b.addEventListener('click', function () { pressDigit(b.getAttribute('data-key')); });
+    });
+    // クリア
+    document.getElementById('clearKey').addEventListener('click', function () {
+        paid = 0; render();
+    });
+    // クイック入金
+    document.querySelectorAll('.quick').forEach(function (b) {
+        b.addEventListener('click', function () {
+            var a = b.getAttribute('data-amount');
+            if (a === 'exact') { paid = total; }
+            else { paid = paid + parseInt(a, 10); }
+            render();
+        });
+    });
+
+    // キーボード入力（数字・Backspace・Enter）
+    document.addEventListener('keydown', function (e) {
+        if (e.key >= '0' && e.key <= '9') { pressDigit(e.key); e.preventDefault(); }
+        else if (e.key === 'Backspace') {
+            paid = Math.floor(paid / 10); render(); e.preventDefault();
+        }
+        else if (e.key === 'Escape') { paid = 0; render(); }
+        else if (e.key === 'Enter') {
+            if (!payBtn.disabled) document.getElementById('checkoutForm').submit();
+        }
+    });
+
+    render();
+})();
+</script>
+
+<%- include('partials/footer') %>

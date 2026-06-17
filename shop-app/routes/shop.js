@@ -1,206 +1,244 @@
 // routes/shop.js
-// Spring Boot の ReqController に相当するルーター
+// 学校祭レジ（POS）のルーター
+//   /        … レジ画面（会計）
+//   /shukei  … 集計（売上のまとめ）
+//   /kanri   … 商品・在庫の管理
 
 const express = require('express');
+const path    = require('path');
+const fs      = require('fs');
 const router  = express.Router();
 const db      = require('../db/database');
 
-// 選べる画像の一覧（public/images/ にある画像ファイル名）
-const IMAGE_LIST = [
-    'guitar', 'midi', 'electone', 'piano', 'trumpet', 'sax', 'horn', 'dram', 'timpani',
-    'notepc', 'tablet', 'phone', 'earphone', 'drone', 'watch', 'meter',
-    'bike1', 'bike2', 'kickboard',
-    'jacket', 'jeans1', 'jeans2', 'hat1', 'visor', 'shoes1', 'shoes2', 'shose3', 'shose4',
-    'sandal1', 'sandal2', 'crocs1', 'crocs2', 'megane1', 'megane2', 'megane3',
-    'bag', 'ruck',
-    'microwave', 'suihanki', 'washing', 'soujiki', 'fryingpan', 'pot', 'silverpot', 'handmixer', 'konro',
-    'ballpen1', 'ballpen2', 'hasami', 'stapler', 'tape', 'bond', 'board',
-    'baseball', 'tennis',
-    'candle1', 'candle2',
-    'thermometer', 'bad',
+// 商品画像の保存先（public/images）。ここに置いたファイルは /images/... で配信される。
+const IMAGES_DIR = path.join(__dirname, '..', 'public', 'images');
+
+// 商品ボタンの色パレット（管理画面で選ぶ）
+const COLORS = [
+    '#e8590c', '#d6336c', '#ae3ec9', '#7048e8', '#1c7ed6',
+    '#0ca678', '#37b24d', '#f08c00', '#e03131', '#495057',
 ];
 
+// 管理画面のJavaScriptが 70x70 にリサイズした画像（data:image/...;base64,...）を送ってくる。
+// それを public/images に実ファイルとして保存し、配信用パス（/images/item-xxx.png）を返す。
+// 想定外の入力や保存失敗のときは空文字（画像なし）を返す。
+function saveImageFromDataUrl(dataUrl) {
+    if (!dataUrl || typeof dataUrl !== 'string') return '';
+    const m = /^data:image\/(png|jpeg|webp);base64,(.+)$/.exec(dataUrl);
+    if (!m) return '';
+    const ext  = m[1] === 'jpeg' ? 'jpg' : m[1];
+    const data = m[2];
+    if (data.length > 300000) return ''; // 70x70 なら通常数KB。巨大なものは弾く
+    let buf;
+    try {
+        buf = Buffer.from(data, 'base64');
+    } catch (e) {
+        return '';
+    }
+    // 教材画像と混ざらないよう item- 接頭辞 ＋ 重複しない名前にする
+    const fileName = 'item-' + Date.now() + '-' + Math.floor(Math.random() * 1e6) + '.' + ext;
+    try {
+        if (!fs.existsSync(IMAGES_DIR)) fs.mkdirSync(IMAGES_DIR, { recursive: true });
+        fs.writeFileSync(path.join(IMAGES_DIR, fileName), buf);
+    } catch (e) {
+        console.error('画像の保存に失敗しました:', e);
+        return '';
+    }
+    return '/images/' + fileName;
+}
+
+// このアプリが作った商品画像（item- で始まるもの）だけを削除する。
+// 教材版から入っている画像（bag.png など）は消さない。
+function deleteItemImage(imagePath) {
+    if (!imagePath) return;
+    const base = path.basename(imagePath);
+    if (!base.startsWith('item-')) return; // 自分が作ったファイルだけ消す
+    const full = path.join(IMAGES_DIR, base);
+    try {
+        if (fs.existsSync(full)) fs.unlinkSync(full);
+    } catch (e) { /* 消せなくても致命的ではないので無視 */ }
+}
+
 // ================================================================
-// 【完成版の店】トップページ（お店の表紙）
-//   生徒が Step1〜6 を作り終えると、ここが本物のお店の入口になる。
+// レジ画面（メイン）
 // ================================================================
 router.get('/', (req, res) => {
-    const itemlist = db.findAllItems();
-    // おすすめ商品として先頭の最大8件だけ表紙に並べる
-    const featured = itemlist.slice(0, 8);
-    res.render('index', { featured });
-});
-
-// ================================================================
-// 【完成版の店】商品一覧（ショップ）
-// ================================================================
-router.get('/shop', (req, res) => {
-    const itemlist = db.findAllItems();
-    res.render('system/shop', { itemlist });
-});
-
-// 【完成版の店】カートに入れる → カート画面へ
-router.get('/shop/add/:code', (req, res) => {
-    const code = parseInt(req.params.code, 10);
-    db.addToCart(code);
-    res.redirect('/cart');
-});
-
-// ================================================================
-// 【完成版の店】カート確認・購入
-// ================================================================
-router.get('/cart', (req, res) => {
+    const items    = db.findAllItems();
     const cartlist = db.findItemInCart();
     const total    = db.calcCartTotal(cartlist);
-    const errorMsg = req.query.error || '';
-    res.render('system/cart', { cartlist, total, errorMsg });
+    const settings = db.getSettings();
+    res.render('regi', { items, cartlist, total, settings, errorMsg: req.query.error || '' });
 });
 
-// 【完成版の店】カートから削除
-router.get('/cart/remove/:code', (req, res) => {
-    const code = parseInt(req.params.code, 10);
-    db.removeFromCart(code);
-    res.redirect('/cart');
+// 商品ボタンを押す → カゴに1つ追加
+router.post('/regi/add/:code', (req, res) => {
+    db.addToCart(parseInt(req.params.code, 10));
+    res.redirect('/');
 });
 
-// 【完成版の店】購入処理 → 購入完了ページへ
-router.post('/buy', (req, res) => {
-    const result = db.purchase();
+// カゴの個数を1つ増やす / 減らす
+router.post('/regi/inc/:code', (req, res) => {
+    db.addToCart(parseInt(req.params.code, 10));
+    res.redirect('/');
+});
+router.post('/regi/dec/:code', (req, res) => {
+    db.decreaseCart(parseInt(req.params.code, 10));
+    res.redirect('/');
+});
+
+// カゴから1行削除
+router.post('/regi/remove/:code', (req, res) => {
+    db.removeFromCart(parseInt(req.params.code, 10));
+    res.redirect('/');
+});
+
+// カゴを全部クリア（取り消し）
+router.post('/regi/clear', (req, res) => {
+    db.clearCart();
+    res.redirect('/');
+});
+
+// 会計する（お預かり金額を受け取る）
+router.post('/regi/checkout', (req, res) => {
+    const paid = parseInt(req.body.paid, 10);
+    if (isNaN(paid) || paid < 0) {
+        return res.redirect('/?error=' + encodeURIComponent('お預かり金額を入力してください'));
+    }
+    const result = db.checkout(paid);
     if (!result.success) {
-        return res.redirect('/cart?error=' + encodeURIComponent(result.message));
+        return res.redirect('/?error=' + encodeURIComponent(result.message));
     }
-    const total = db.calcCartTotal(result.items);
-    req.session.lastOrder = { items: result.items, total };
-    res.redirect('/complete');
+    // 会計結果（おつり）をセッションに保存して結果画面へ
+    req.session.lastSale = result.sale;
+    res.redirect('/regi/done');
 });
 
-// 【完成版の店】購入完了
-router.get('/complete', (req, res) => {
-    const order = req.session.lastOrder || { items: [], total: 0 };
-    res.render('system/complete', { order });
-});
-
-// ================================================================
-// 【完成版の店】商品詳細ページ（カードの「詳細」から開く）
-// ================================================================
-router.get('/item/:code', (req, res) => {
-    const code = parseInt(req.params.code, 10);
-    const item = db.findItemByCode(code);
-    if (!item) {
-        return res.status(404).render('system/item', { item: null, addUrl: '/shop/add' });
-    }
-    res.render('system/item', { item, addUrl: '/shop/add' });
+// 会計結果（おつり）画面
+router.get('/regi/done', (req, res) => {
+    const sale = req.session.lastSale;
+    if (!sale) return res.redirect('/');
+    res.render('regi_done', { sale });
 });
 
 // ================================================================
-// 【学習用】Step 1〜6 の案内メニュー（授業で作る過程を残してある）
+// 集計
 // ================================================================
-router.get('/steps', (req, res) => {
-    res.render('system/index_steps');
+router.get('/shukei', (req, res) => {
+    const summary = db.getSalesSummary();
+    res.render('shukei', { summary });
+});
+
+// 売上の履歴（詳細）。会計ごとに、単価・個数まで表示する。
+router.get('/shukei/rireki', (req, res) => {
+    const history = db.getSalesHistory();
+    res.render('shukei_rireki', { history });
+});
+
+// 集計をリセット（売上記録をすべて消す）
+router.post('/shukei/reset', (req, res) => {
+    db.resetSales();
+    res.redirect('/shukei');
 });
 
 // ================================================================
-// Step 1：データエントリー
+// 商品・在庫の管理
 // ================================================================
-router.get('/step1', (req, res) => {
-    const itemlist = db.findAllItems();
-    res.render('system/step1', {
-        itemlist,
-        imageList: IMAGE_LIST,
-        message: req.query.msg || '',
+router.get('/kanri', (req, res) => {
+    const items    = db.findAllItems();
+    const settings = db.getSettings();
+    res.render('kanri', { items, colors: COLORS, settings, message: req.query.msg || '' });
+});
+
+// レジの設定を保存（クイック入金額・ボタンの列数・高さ）
+router.post('/kanri/settings', (req, res) => {
+    db.saveSettings({
+        quick1:     req.body.quick1,
+        quick2:     req.body.quick2,
+        quick3:     req.body.quick3,
+        cols:       req.body.cols,
+        btn_height: req.body.btn_height,
     });
+    res.redirect('/kanri?msg=settings');
 });
 
-router.post('/step1', (req, res) => {
-    const { name, price, image, description } = req.body;
-
-    // 簡易バリデーション
-    if (!name || !price || !image) {
-        return res.redirect('/step1?msg=error_empty');
-    }
-
-    const priceNum = parseInt(price, 10);
-    if (isNaN(priceNum) || priceNum <= 0) {
-        return res.redirect('/step1?msg=error_price');
-    }
-
-    db.addItem(name.trim(), priceNum, image, (description || '').trim());
-    res.redirect('/step1?msg=added');
-});
-
-// Step 1：商品削除
-router.post('/step1/delete', (req, res) => {
+// 商品ボタンの並び順を1つ動かす（前へ / 後ろへ）
+router.post('/kanri/move', (req, res) => {
     const code = parseInt(req.body.code, 10);
-    db.deleteItem(code);
-    res.redirect('/step1?msg=deleted');
+    const dir  = req.body.dir === 'up' ? 'up' : 'down';
+    db.moveItem(code, dir);
+    res.redirect('/kanri?msg=moved');
 });
 
-// ================================================================
-// Step 2：カード形式で表示（画像・価格・在庫）＋ 商品詳細ページ
-// ================================================================
-router.get('/step2', (req, res) => {
-    const itemlist = db.findAllItems();
-    res.render('system/step2', { itemlist });
+// 商品を新規登録（初期在庫つき）
+router.post('/kanri/add', (req, res) => {
+    const { name, price, stock, color, image } = req.body;
+    const priceNum = parseInt(price, 10);
+    const stockNum = parseInt(stock, 10);
+    if (!name || !name.trim()) return res.redirect('/kanri?msg=error_name');
+    if (isNaN(priceNum) || priceNum < 0) return res.redirect('/kanri?msg=error_price');
+    db.addItem(name.trim(), priceNum, isNaN(stockNum) ? 0 : stockNum, color || COLORS[0], saveImageFromDataUrl(image));
+    res.redirect('/kanri?msg=added');
 });
 
-// ================================================================
-// Step 3：カートに入れる（カードに「カートに入れる」ボタン）
-// ================================================================
-router.get('/step3', (req, res) => {
-    const itemlist = db.findAllItems();
-    res.render('system/step3', { itemlist });
-});
-
-// カートに追加 → カート画面（Step4）へ
-router.get('/cart/add/:code', (req, res) => {
-    const code = parseInt(req.params.code, 10);
-    db.addToCart(code);
-    res.redirect('/step4');
-});
-
-// ================================================================
-// Step 4：購入する（カート確認 → 買うと在庫が減る）
-// ================================================================
-router.get('/step4', (req, res) => {
-    const cartlist  = db.findItemInCart();
-    const total     = db.calcCartTotal(cartlist);
-    const errorMsg  = req.query.error || '';
-    res.render('system/step4', { cartlist, total, errorMsg });
-});
-
-// カートから削除
-router.get('/cart/del/:code', (req, res) => {
-    const code = parseInt(req.params.code, 10);
-    db.removeFromCart(code);
-    res.redirect('/step4');
-});
-
-// 購入処理（POST）→ 在庫を減らして購入完了（Step5）へ
-router.post('/purchase', (req, res) => {
-    const result = db.purchase();
-    if (!result.success) {
-        return res.redirect('/step4?error=' + encodeURIComponent(result.message));
+// 商品の内容を更新（名前・値段・色）
+router.post('/kanri/update', (req, res) => {
+    const code = parseInt(req.body.code, 10);
+    const { name, price, color, image, removeImage } = req.body;
+    const priceNum = parseInt(price, 10);
+    if (!name || !name.trim() || isNaN(priceNum) || priceNum < 0) {
+        return res.redirect('/kanri?msg=error_edit');
     }
-    const total = db.calcCartTotal(result.items);
-    // 購入した商品と合計をセッションに保存してStep5へ
-    req.session.lastOrder = { items: result.items, total };
-    res.redirect('/step5');
+    // 画像の扱い：
+    //   「画像を消す」にチェック → 古い画像ファイルを消して空文字で上書き
+    //   新しい画像を選んだ        → 保存してそのパスで上書き（古い画像は消す）
+    //   どちらでもない            → undefined を渡して画像は変更しない
+    const old = db.findItemByCode(code);
+    let img;
+    if (removeImage) {
+        img = '';
+        if (old) deleteItemImage(old.image);
+    } else if (image && image.trim()) {
+        img = saveImageFromDataUrl(image);
+        if (img && old) deleteItemImage(old.image); // 保存できたときだけ古いのを消す
+    } else {
+        img = undefined;
+    }
+    db.updateItem(code, name.trim(), priceNum, color, img);
+    res.redirect('/kanri?msg=updated');
 });
 
-// ================================================================
-// Step 5：購入完了画面
-// ================================================================
-router.get('/step5', (req, res) => {
-    const order = req.session.lastOrder || { items: [], total: 0 };
-    res.render('system/step5', { order });
+// 値段を変える（売り切りたいときの値下げなど）
+router.post('/kanri/price', (req, res) => {
+    const code  = parseInt(req.body.code, 10);
+    const price = parseInt(req.body.price, 10);
+    if (isNaN(price) || price < 0) return res.redirect('/kanri?msg=error_price');
+    db.setPrice(code, price);
+    res.redirect('/kanri?msg=priceset');
 });
 
-// ================================================================
-// 旧URL互換（既存リンクが壊れないように残す）
-// ================================================================
-router.get('/list',     (req, res) => res.redirect('/step2'));
-router.get('/cardlist', (req, res) => res.redirect('/step2'));
-router.get('/step6',    (req, res) => res.redirect('/step5'));
-router.get('/about',    (req, res) => res.render('system/about'));
+// 在庫を補充する（今の在庫に足す）
+router.post('/kanri/stock/add', (req, res) => {
+    const code   = parseInt(req.body.code, 10);
+    const amount = parseInt(req.body.amount, 10);
+    if (!isNaN(amount) && amount !== 0) db.addStock(code, amount);
+    res.redirect('/kanri?msg=stocked');
+});
+
+// 在庫の数を直接そろえる（修正用）
+router.post('/kanri/stock/set', (req, res) => {
+    const code  = parseInt(req.body.code, 10);
+    const stock = parseInt(req.body.stock, 10);
+    if (!isNaN(stock) && stock >= 0) db.setStock(code, stock);
+    res.redirect('/kanri?msg=stockset');
+});
+
+// 商品を削除
+router.post('/kanri/delete', (req, res) => {
+    const code = parseInt(req.body.code, 10);
+    const item = db.findItemByCode(code);
+    db.deleteItem(code);
+    if (item) deleteItemImage(item.image); // 商品画像も後始末する
+    res.redirect('/kanri?msg=deleted');
+});
 
 module.exports = router;

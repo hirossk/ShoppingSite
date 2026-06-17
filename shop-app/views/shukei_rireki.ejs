@@ -1,0 +1,70 @@
+<%- include('partials/header') %>
+
+<!-- ============================================================ -->
+<!--  売上の履歴（詳細）：会計ごとに単価・個数まで表示              -->
+<!-- ============================================================ -->
+<section class="py-4">
+<div class="container">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="m-0"><i class="bi bi-clock-history me-2"></i>売上の履歴（詳細）</h2>
+        <a href="/shukei" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>集計に戻る
+        </a>
+    </div>
+
+    <% if (history.length === 0) { %>
+    <p class="text-center text-muted p-4">まだ売上がありません。</p>
+    <% } else { %>
+        <% history.forEach(function(sale) {
+            // created_at は ISO 文字列。時:分:秒 で表示する。
+            var d  = new Date(sale.created_at);
+            var hh = String(d.getHours()).padStart(2, '0');
+            var mm = String(d.getMinutes()).padStart(2, '0');
+            var ss = String(d.getSeconds()).padStart(2, '0');
+        %>
+        <div class="card shadow-sm mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-clock me-1"></i><%= hh %>:<%= mm %>:<%= ss %></span>
+                <span class="fw-bold">合計 ¥<%= sale.total.toLocaleString() %></span>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>商品名</th>
+                            <th class="text-end" style="width:120px;">単価</th>
+                            <th class="text-center" style="width:90px;">個数</th>
+                            <th class="text-end" style="width:130px;">小計</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% sale.lines.forEach(function(line) { %>
+                        <tr>
+                            <td><%= line.name %></td>
+                            <td class="text-end">¥<%= line.price.toLocaleString() %></td>
+                            <td class="text-center"><%= line.count %></td>
+                            <td class="text-end fw-bold">¥<%= (line.price * line.count).toLocaleString() %></td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                    <tfoot class="table-light">
+                        <tr>
+                            <td colspan="3" class="text-end text-muted">お預かり</td>
+                            <td class="text-end">¥<%= sale.paid.toLocaleString() %></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-end text-muted">おつり</td>
+                            <td class="text-end">¥<%= sale.change.toLocaleString() %></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <% }) %>
+    <% } %>
+
+</div>
+</section>
+
+<%- include('partials/footer') %>
