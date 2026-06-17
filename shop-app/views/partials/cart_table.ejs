@@ -7,7 +7,7 @@
 //  受け取る値：
 //    cartlist   … カートに入っている商品の一覧
 //    total      … 合計金額
-//    removeUrl  … 削除ボタンの行き先（例 '/cart/del' や '/cart/remove'）
+//    removeurl  … 削除ボタンの行き先（例 '/cart/del' や '/cart/remove'）
 // ============================================================
 %>
 <div class="card shadow-sm mb-4">
@@ -37,13 +37,13 @@
                     </td>
                     <!-- 小計 ＝ 数量 × 価格 -->
                     <td class="text-end align-middle fw-bold">
-                        <!-- 【課題4 穴埋め】小計を計算して出そう。'dummy' を書きかえてね。
+                        <!-- 【課題4-A 穴埋め】小計を計算して出そう。'dummy' を書きかえてね。
                              ヒント：小計は「数量 × 値段」。cart.count（数量）と cart.price（値段）をかけ算する。
                                     (cart.count * cart.price).toLocaleString() と書いてみよう。 -->
                         <%= 'dummy' %>円
                     </td>
                     <td class="text-center align-middle">
-                        <a href="<%= removeUrl %>/<%= cart.code %>" class="btn btn-sm btn-outline-danger"
+                        <a href="<%= removeurl %>/<%= cart.code %>" class="btn btn-sm btn-outline-danger"
                            onclick="return confirm('<%= cart.name %> をカートから削除しますか？')">
                             <i class="bi bi-trash"></i>
                         </a>

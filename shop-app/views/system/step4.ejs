@@ -41,10 +41,10 @@
     <% } else { %>
 
     <!-- カート内容テーブル（共通パーツ：本番 /cart と同じものを使用） -->
-    <%- include('../partials/cart_table', { cartlist: cartlist, total: total, removeUrl: '/cart/del' }) %>
+    <%- include('../partials/cart_table', { cartlist: cartlist, total: total, removeurl: '/cart/del' }) %>
 
     <!-- 購入ボタン（共通パーツ：本番 /cart と同じものを使用） -->
-    <%- include('../partials/buy_button', { buyUrl: '/purchase', total: total }) %>
+    <%- include('../partials/buy_button', { buyurl: '/purchase', total: total }) %>
     <div class="text-center mt-2">
         <a href="/step3" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left me-1"></i>買い物を続ける（Step 3）

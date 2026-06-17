@@ -87,9 +87,9 @@ router.get('/item/:code', (req, res) => {
     const code = parseInt(req.params.code, 10);
     const item = db.findItemByCode(code);
     if (!item) {
-        return res.status(404).render('system/item', { item: null, addUrl: '/shop/add' });
+        return res.status(404).render('system/item', { item: null, addurl: '/shop/add' });
     }
-    res.render('system/item', { item, addUrl: '/shop/add' });
+    res.render('system/item', { item, addurl: '/shop/add' });
 });
 
 // ================================================================

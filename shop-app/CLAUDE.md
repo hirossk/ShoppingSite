@@ -15,13 +15,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | 場所 | 内容 | 課題 |
 |------|------|------|
 | `db/database.js` `purchase()` の `const newStock = item.stock;` | 在庫が減らない（正解は `item.stock - item.count`） | 4-B |
-| `views/partials/product_card.ejs` の `'dummy'` | 画像・価格・在庫＋カートボタンの行き先(`addUrl`)・`item.code`・色クラス(`btn-primary`) | 2,3-A〜C |
+| `views/partials/product_card.ejs` の `'dummy'` | 画像・価格・在庫＋カートボタンの行き先(`addurl`)・`item.code`・色クラス(`btn-primary`) | 2,3-A〜C |
 | `views/partials/cart_table.ejs` の `'dummy'` | 小計の計算 | 4-A |
-| `views/partials/buy_button.ejs` の `'dummy'` | 購入ボタンの送信先(`buyUrl`)・色クラス(`btn-danger`) | 4-C,4-D |
-| `views/partials/item_detail.ejs` の `'dummy'` | 詳細ページの画像・値段・在庫＋行き先(`addUrl`)・商品番号・色クラス | おかわりD-A〜D-F |
+| `views/partials/buy_button.ejs` の `'dummy'` | 購入ボタンの送信先(`buyurl`)・色クラス(`btn-danger`) | 4-C,4-D |
+| `views/partials/item_detail.ejs` の `'dummy'` | 詳細ページの画像・値段・在庫＋行き先(`addurl`)・商品番号・色クラス | おかわりD-A〜D-F |
 | `db/seed.js` の `______` / コメントアウトされた `INSERT` | 初期商品の追加 | 1-A |
 
-注: カートボタン／購入ボタンの「行き先」は文字列のハードコードではなく `addUrl`／`buyUrl`
+注: カートボタン／購入ボタンの「行き先」は文字列のハードコードではなく `addurl`／`buyurl`
 変数を書かせる穴埋め（ページごとに `/cart/add`↔`/shop/add`、`/purchase`↔`/buy` に切り替わる
 共有パーツの仕組みを保つため）。色は `class="btn ___"` のクラス名を書かせる穴埋め。
 
@@ -56,9 +56,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 （worksheet の「自分が作った画面がお店で使われる」という体験はこの構造に依存）。
 部品を編集するときは step ページと完成版ページの**両方**への影響を意識すること。
 
-`product_card.ejs` は `addUrl` 変数で「カートに入れる」リンク先を切り替える
+`product_card.ejs` は `addurl` 変数で「カートに入れる」リンク先を切り替える
 （Step3 では `/cart/add`、本番ショップでは `/shop/add`）。同様に `buy_button.ejs`（購入ボタン）は
-`buyUrl` 変数で送信先を切り替える（Step4 では `/purchase`、本番カートでは `/buy`）。
+`buyurl` 変数で送信先を切り替える（Step4 では `/purchase`、本番カートでは `/buy`）。
 `buy_button.ejs` は `step4.ejs` と `cart.ejs` の両方が `include` する共有パーツ。
 
 `/list` `/cardlist` `/step6` `/about` は旧 URL 互換のリダイレクト（`routes/shop.js` 末尾）。

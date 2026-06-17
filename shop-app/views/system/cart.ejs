@@ -30,10 +30,10 @@
     <% } else { %>
 
     <!-- カート内容テーブル（共通パーツ：Step5 と同じものを使用） -->
-    <%- include('../partials/cart_table', { cartlist: cartlist, total: total, removeUrl: '/cart/remove' }) %>
+    <%- include('../partials/cart_table', { cartlist: cartlist, total: total, removeurl: '/cart/remove' }) %>
 
     <!-- 購入ボタン（共通パーツ：Step4 と同じものを使用） -->
-    <%- include('../partials/buy_button', { buyUrl: '/buy', total: total }) %>
+    <%- include('../partials/buy_button', { buyurl: '/buy', total: total }) %>
     <div class="text-center mt-2">
         <a href="/shop" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left me-1"></i>買い物を続ける

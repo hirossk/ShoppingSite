@@ -6,10 +6,10 @@
 //
 //  受け取る値：
 //    item   … 1つの商品（name / price / image / stock / code / description）
-//    addUrl … 「カートに入れる」の行き先（例 '/cart/add' や '/shop/add'）
+//    addurl … 「カートに入れる」の行き先（例 '/cart/add' や '/shop/add'）
 //
 //  ★【おかわり課題】このページには Step2・Step3 で学んだのと同じ
-//    穴埋め（'dummy'）が D-A〜D-D の4か所あります。時間が余ったら挑戦しよう！
+//    穴埋め（'dummy'）が D-A〜D-F の6か所あります。時間が余ったら挑戦しよう！
 // ============================================================
 %>
 <div class="card shadow-sm">
@@ -45,7 +45,7 @@
                 <p class="mb-4" style="white-space:pre-wrap;"><%= item.description && item.description.length > 0 ? item.description : 'この商品の説明はまだありません。' %></p>
 
                 <% if (item.stock > 0) { %>
-                <!-- 【おかわり課題D-D 穴埋め】ボタンの行き先を入れよう。1つ目の 'dummy' を addUrl に。（Step3-A と同じ） -->
+                <!-- 【おかわり課題D-D 穴埋め】ボタンの行き先を入れよう。1つ目の 'dummy' を addurl に。（Step3-A と同じ） -->
                 <!-- 【おかわり課題D-E 穴埋め】商品番号を入れよう。2つ目の 'dummy' を item.code に。（Step3-B と同じ） -->
                 <!-- 【おかわり課題D-F 穴埋め】ボタンの色を入れよう。3つ目の 'dummy' を btn-primary に。（Step3-C と同じ） -->
                 <a href="<%= 'dummy' %>/<%= 'dummy' %>" class="btn <%= 'dummy' %> btn-lg px-5">

@@ -167,18 +167,18 @@ URL `http://localhost:3000/step3` には「カートに入れる」ボタンが�
 ```
 
 ### 課題3-A：ボタンの「行き先」を入れる（1つ目の `'dummy'`）
-1つ目の `'dummy'` を `addUrl` に書きかえよう（クォート `' '` は付けない）。
+1つ目の `'dummy'` を `addurl` に書きかえよう（クォート `' '` は付けない）。
 ```html
-<a href="<%= addUrl %>/<%= 'dummy' %>" ...>
+<a href="<%= addurl %>/<%= 'dummy' %>" ...>
 ```
-💡ヒント：カートに入れるときの行き先（URL）は `addUrl` という箱に入っています。
+💡ヒント：カートに入れるときの行き先（URL）は `addurl` という箱に入っています。
 これは Step3 では `/cart/add`、本番ショップでは `/shop/add` に **自動で切り替わります**。
-だから皆さんは `addUrl` と書くだけでOK！
+だから皆さんは `addurl` と書くだけでOK！
 
 ### 課題3-B：どの商品かを渡す（2つ目の `'dummy'`）
 2つ目の `'dummy'` を商品番号 `item.code` に書きかえよう。
 ```html
-<a href="<%= addUrl %>/<%= item.code %>" ...>
+<a href="<%= addurl %>/<%= item.code %>" ...>
 ```
 💡ヒント：これでリンク先が `/cart/add/3` のようになり、「○番の商品をカートに入れて」と
 サーバーにお願いできます。
@@ -244,12 +244,12 @@ const newStock = item.stock - item.count;
 **ファイル：`views/partials/buy_button.ejs`**
 
 「購入する」ボタンも、今は **送信先が決まっていない** ので押しても買えません。
-`form` の `action` の `'dummy'` を `buyUrl` に書きかえよう（クォート `' '` は付けない）。
+`form` の `action` の `'dummy'` を `buyurl` に書きかえよう（クォート `' '` は付けない）。
 ```html
-<form action="<%= buyUrl %>" method="POST">
+<form action="<%= buyurl %>" method="POST">
 ```
-💡ヒント：送信先は `buyUrl` という箱に入っています。Step4 では `/purchase`、本番ショップの
-カートでは `/buy` に **自動で切り替わります**。だから皆さんは `buyUrl` と書くだけでOK！
+💡ヒント：送信先は `buyurl` という箱に入っています。Step4 では `/purchase`、本番ショップの
+カートでは `/buy` に **自動で切り替わります**。だから皆さんは `buyurl` と書くだけでOK！
 `'dummy'` のままだと、押しても「買えない（404 エラー）」になります。
 
 > ✨ この購入ボタンも共通パーツです。直すと、本番ショップのカート（`/cart`）の
@@ -323,13 +323,13 @@ URL `http://localhost:3000/step5`（Step4 で購入すると自動でここに�
 
 ### 課題D-D：「カートに入れる」の行き先を入れる（Step3-A と同じ）
 ```html
-<a href="<%= addUrl %>/<%= 'dummy' %>" ...>
+<a href="<%= addurl %>/<%= 'dummy' %>" ...>
 ```
-💡ヒント：1つ目の `'dummy'` を `addUrl` に（クォートは付けない）。
+💡ヒント：1つ目の `'dummy'` を `addurl` に（クォートは付けない）。
 
 ### 課題D-E：「カートに入れる」に商品番号を渡す（Step3-B と同じ）
 ```html
-<a href="<%= addUrl %>/<%= item.code %>" ...>
+<a href="<%= addurl %>/<%= item.code %>" ...>
 ```
 💡ヒント：2つ目の `'dummy'` を商品番号 `item.code` に。
 

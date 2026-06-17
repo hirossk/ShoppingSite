@@ -7,7 +7,7 @@
 //  受け取る値：
 //    item       … 1つの商品（name / price / image / stock / code）
 //    showCart   … true なら「カートに入れる」ボタンを出す
-//    addUrl     … カートボタンの行き先（例 '/cart/add' や '/shop/add'）
+//    addurl     … カートボタンの行き先（例 '/cart/add' や '/shop/add'）
 //    showDetail … true なら「詳細」リンク（商品詳細ページ /item/番号）を出す
 // ============================================================
 %>
@@ -51,11 +51,11 @@
             <% } %>
         </div>
         <% if (showCart) { %>
-        <!-- カートボタン（行き先 addUrl ＋ 商品番号 にリンク） -->
+        <!-- カートボタン（行き先 addurl ＋ 商品番号 にリンク） -->
         <div class="card-footer bg-transparent border-top p-3 text-center">
             <% if (item.stock > 0) { %>
-            <!-- 【課題3-A 穴埋め】ボタンの「行き先」を入れよう。1つ目の 'dummy' を addUrl に書きかえてね。
-                 ヒント：カートに入れるURLは addUrl という箱に入っているよ（ページに合った行き先に自動でなる）。 -->
+            <!-- 【課題3-A 穴埋め】ボタンの「行き先」を入れよう。1つ目の 'dummy' を addurl に書きかえてね。
+                 ヒント：カートに入れるURLは addurl という箱に入っているよ（ページに合った行き先に自動でなる）。 -->
             <!-- 【課題3-B 穴埋め】どの商品かを伝える「商品番号」を入れよう。2つ目の 'dummy' を item.code に。 -->
             <!-- 【課題3-C 穴埋め】ボタンの色を決めよう。3つ目の 'dummy' を btn-primary に書きかえてね。
                  ヒント：btn-primary=青 / btn-success=緑 / btn-danger=赤 / btn-warning=黄。好きな色でOK。 -->
