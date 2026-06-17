@@ -1,0 +1,62 @@
+<%
+// ============================================================
+//  商品詳細（共通パーツ）
+//  ★Step2 の「詳細」リンクと、本番ショップの商品詳細ページ(/item/番号)
+//    が、この同じパーツを使います。
+//
+//  受け取る値：
+//    item   … 1つの商品（name / price / image / stock / code / description）
+//    addUrl … 「カートに入れる」の行き先（例 '/cart/add' や '/shop/add'）
+//
+//  ★【おかわり課題】このページには Step2・Step3 で学んだのと同じ
+//    穴埋め（'dummy'）が D-A〜D-D の4か所あります。時間が余ったら挑戦しよう！
+// ============================================================
+%>
+<div class="card shadow-sm">
+    <div class="row g-0">
+        <!-- 左：大きな商品画像 -->
+        <div class="col-md-5 d-flex align-items-center justify-content-center bg-light p-4">
+            <!-- 【おかわり課題D-A 穴埋め】大きな商品画像を出そう。'dummy' を書きかえてね。
+                 ヒント：画像のファイル名は item.image （Step2-A と同じだよ） -->
+            <img src="/images/<%= 'dummy' %>.png" alt="<%= item.name %>"
+                 class="img-fluid" style="max-height:320px; object-fit:contain;">
+        </div>
+        <!-- 右：商品情報 -->
+        <div class="col-md-7">
+            <div class="card-body p-4">
+                <h2 class="fw-bold mb-2"><%= item.name %></h2>
+                <p class="text-primary fs-2 fw-bold mb-3">
+                    <!-- 【おかわり課題D-B 穴埋め】値段を出そう。'dummy' を書きかえてね。
+                         ヒント：値段は item.price 。うしろに .toLocaleString() を付けると
+                                30,000 のようにカンマが入るよ。（Step2-B と同じ） -->
+                    ¥<%= 'dummy' %>
+                </p>
+                <p class="mb-3">
+                    <% if (item.stock > 0) { %>
+                    <!-- 【おかわり課題D-C 穴埋め】在庫の数を出そう。'dummy' を書きかえてね。
+                         ヒント：在庫の数は item.stock （Step2-C と同じ） -->
+                    <span class="badge bg-success fs-6">在庫 <%= 'dummy' %> 個</span>
+                    <% } else { %>
+                    <span class="badge bg-danger fs-6">売り切れ</span>
+                    <% } %>
+                </p>
+                <hr>
+                <h6 class="text-muted">商品説明</h6>
+                <p class="mb-4" style="white-space:pre-wrap;"><%= item.description && item.description.length > 0 ? item.description : 'この商品の説明はまだありません。' %></p>
+
+                <% if (item.stock > 0) { %>
+                <!-- 【おかわり課題D-D 穴埋め】ボタンの行き先を入れよう。1つ目の 'dummy' を addUrl に。（Step3-A と同じ） -->
+                <!-- 【おかわり課題D-E 穴埋め】商品番号を入れよう。2つ目の 'dummy' を item.code に。（Step3-B と同じ） -->
+                <!-- 【おかわり課題D-F 穴埋め】ボタンの色を入れよう。3つ目の 'dummy' を btn-primary に。（Step3-C と同じ） -->
+                <a href="<%= 'dummy' %>/<%= 'dummy' %>" class="btn <%= 'dummy' %> btn-lg px-5">
+                    <i class="bi bi-cart-plus me-2"></i>カートに入れる
+                </a>
+                <% } else { %>
+                <button class="btn btn-secondary btn-lg px-5" disabled>
+                    <i class="bi bi-x-circle me-2"></i>売り切れ
+                </button>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>

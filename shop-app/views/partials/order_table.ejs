@@ -1,0 +1,51 @@
+<%
+// ============================================================
+//  購入明細テーブル（共通パーツ）
+//  ★Step5・本番ショップの購入完了(/complete) が両方同時に変わります。
+//
+//  受け取る値：
+//    order … 購入した内容（items の配列 と total）
+// ============================================================
+%>
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-success text-white">
+        <i class="bi bi-receipt me-2"></i>購入明細
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>画像</th>
+                    <th>商品名</th>
+                    <th class="text-center">数量</th>
+                    <th class="text-end">価格</th>
+                    <th class="text-end">小計</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% order.items.forEach(function(item) { %>
+                <tr>
+                    <td>
+                        <img src="/images/<%= item.image %>.png"
+                             width="60" height="48" alt="<%= item.name %>">
+                    </td>
+                    <td class="align-middle"><%= item.name %></td>
+                    <td class="text-center align-middle"><%= item.count %></td>
+                    <td class="text-end align-middle"><%= item.price.toLocaleString() %>円</td>
+                    <td class="text-end align-middle fw-bold">
+                        <%= (item.count * item.price).toLocaleString() %>円
+                    </td>
+                </tr>
+                <% }) %>
+            </tbody>
+            <tfoot class="table-secondary">
+                <tr>
+                    <td colspan="4" class="text-end fw-bold fs-5">合計</td>
+                    <td class="text-end fw-bold fs-5 text-danger">
+                        <%= order.total.toLocaleString() %>円
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

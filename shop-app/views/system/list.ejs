@@ -1,0 +1,36 @@
+<%- include('../partials/header') %>
+
+<!-- Section-->
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <table class="table table-striped">
+                <!-- 表の見出し -->
+                <thead>
+                    <tr>
+                        <th scope="col">コード</th>
+                        <th scope="col">商品名</th>
+                        <th scope="col">価格</th>
+                        <th scope="col">画像</th>
+                    </tr>
+                </thead>
+                <!-- 商品の一覧表示 -->
+                <tbody>
+                    <% itemlist.forEach(function(item) { %>
+                    <tr>
+                        <td class="tdtest"><%= item.code %></td>
+                        <td class="tdtest"><%= item.name %></td>
+                        <td class="tdtest"><%= item.price %></td>
+                        <td class="tdtest">
+                            <img src="/images/<%= item.image %>.png"
+                                width="120" height="96" alt="<%= item.image %>">
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<%- include('../partials/footer') %>

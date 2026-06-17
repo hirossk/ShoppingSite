@@ -1,0 +1,65 @@
+<%
+// ============================================================
+//  カートの中身テーブル（共通パーツ）
+//  ★このファイルを直すと、Step4・本番ショップのカート(/cart) が
+//    「両方同時に」変わります。
+//
+//  受け取る値：
+//    cartlist   … カートに入っている商品の一覧
+//    total      … 合計金額
+//    removeUrl  … 削除ボタンの行き先（例 '/cart/del' や '/cart/remove'）
+// ============================================================
+%>
+<div class="card shadow-sm mb-4">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>画像</th>
+                    <th>商品名</th>
+                    <th class="text-end">価格</th>
+                    <th class="text-center">数量</th>
+                    <th class="text-end">小計</th>
+                    <th class="text-center">削除</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% cartlist.forEach(function(cart) { %>
+                <tr>
+                    <td>
+                        <img src="/images/<%= cart.image %>.png"
+                             width="60" height="48" alt="<%= cart.name %>">
+                    </td>
+                    <td class="align-middle"><%= cart.name %></td>
+                    <td class="text-end align-middle"><%= cart.price.toLocaleString() %>円</td>
+                    <td class="text-center align-middle">
+                        <span class="badge bg-primary fs-6"><%= cart.count %></span>
+                    </td>
+                    <!-- 小計 ＝ 数量 × 価格 -->
+                    <td class="text-end align-middle fw-bold">
+                        <!-- 【課題4 穴埋め】小計を計算して出そう。'dummy' を書きかえてね。
+                             ヒント：小計は「数量 × 値段」。cart.count（数量）と cart.price（値段）をかけ算する。
+                                    (cart.count * cart.price).toLocaleString() と書いてみよう。 -->
+                        <%= 'dummy' %>円
+                    </td>
+                    <td class="text-center align-middle">
+                        <a href="<%= removeUrl %>/<%= cart.code %>" class="btn btn-sm btn-outline-danger"
+                           onclick="return confirm('<%= cart.name %> をカートから削除しますか？')">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                <% }) %>
+            </tbody>
+            <tfoot class="table-secondary">
+                <tr>
+                    <td colspan="4" class="text-end fw-bold fs-5">合計金額</td>
+                    <td class="text-end fw-bold fs-5 text-danger">
+                        <%= total.toLocaleString() %>円
+                    </td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

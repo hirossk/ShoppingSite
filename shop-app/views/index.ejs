@@ -1,0 +1,57 @@
+<%- include('partials/header') %>
+
+<!-- ============================================================ -->
+<!--  お店の表紙（トップページ）                                  -->
+<!--  ★ここの「店名」や「キャッチコピー」を自分のお店に変えてみよう！ -->
+<!-- ============================================================ -->
+<header class="py-3">
+    <div class="container px-lg-3">
+        <div class="p-4 p-lg-5 bg-dark text-white rounded-3 text-center">
+            <h1 class="display-4 fw-bold">🛒 翔陽ストアへようこそ</h1>
+            <p class="fs-5 mb-4">ほしいものが、きっと見つかる。</p>
+            <a href="/shop" class="btn btn-warning btn-lg px-5">
+                <i class="bi bi-bag me-2"></i>買い物を始める
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- おすすめ商品（データベースから読み込んで表示） -->
+<section class="pt-2 pb-5">
+    <div class="container px-lg-3">
+        <h2 class="h4 fw-bold border-start border-4 border-warning ps-3 mb-4">
+            おすすめ商品
+        </h2>
+
+        <% if (featured.length === 0) { %>
+        <div class="text-center p-5 text-muted">
+            商品がまだありません。
+        </div>
+        <% } else { %>
+        <div class="row gx-4 gy-4 row-cols-2 row-cols-md-3 row-cols-xl-4">
+            <% featured.forEach(function(item) { %>
+            <%- include('partials/product_card', { item: item, showCart: false, addUrl: '', showDetail: true }) %>
+            <% }) %>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="/shop" class="btn btn-outline-dark btn-lg px-5">
+                すべての商品を見る <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+        <% } %>
+    </div>
+</section>
+
+<!-- 授業用：制作ステップへのリンク（生徒・先生が学習過程に戻る入口） -->
+<section class="pb-5">
+    <div class="container px-lg-3">
+        <div class="alert alert-light border text-center small mb-0">
+            <i class="bi bi-mortarboard me-1"></i>
+            授業で使う「制作ステップ（Step 1〜6）」は
+            <a href="/steps" class="fw-bold">こちら</a> から開けます。
+        </div>
+    </div>
+</section>
+
+<%- include('partials/footer') %>

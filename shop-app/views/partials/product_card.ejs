@@ -1,0 +1,73 @@
+<%
+// ============================================================
+//  商品カード（共通パーツ）
+//  ★このファイルを直すと、Step2・Step3・本番ショップ(/shop)・
+//    トップページ(/) の商品カードが「すべて同時に」変わります。
+//
+//  受け取る値：
+//    item       … 1つの商品（name / price / image / stock / code）
+//    showCart   … true なら「カートに入れる」ボタンを出す
+//    addUrl     … カートボタンの行き先（例 '/cart/add' や '/shop/add'）
+//    showDetail … true なら「詳細」リンク（商品詳細ページ /item/番号）を出す
+// ============================================================
+%>
+<div class="col">
+    <div class="card h-100 shadow-sm">
+        <!-- 商品画像（詳細ページへのリンク付き）
+             【課題2-A 穴埋め】商品の画像を出そう。'dummy' を書きかえてね。
+             ヒント：画像のファイル名は item.image （'dummy' のままだと絵がこわれて表示されるよ）
+             ※画像は下に2か所あるので、両方とも直そう！ -->
+        <% if (showDetail) { %>
+        <a href="/item/<%= item.code %>">
+            <img class="card-img-top" src="/images/<%= 'dummy' %>.png"
+                 alt="<%= item.name %>" style="height:180px; object-fit:contain; padding:8px;">
+        </a>
+        <% } else { %>
+        <img class="card-img-top" src="/images/<%= 'dummy' %>.png"
+             alt="<%= item.name %>" style="height:180px; object-fit:contain; padding:8px;">
+        <% } %>
+        <!-- 商品情報 -->
+        <div class="card-body p-3 text-center">
+            <h5 class="card-title fw-bold mb-1"><%= item.name %></h5>
+            <p class="card-text text-primary fs-5 fw-bold mb-1">
+                <!-- 【課題2-B 穴埋め】ここに値段を出そう。'dummy' を書きかえてね。
+                     ヒント：値段は item.price 。うしろに .toLocaleString() を付けると
+                            30,000 のように3けたごとにカンマが入って見やすくなるよ。 -->
+                ¥<%= 'dummy' %>
+            </p>
+            <p class="card-text small text-muted mb-1">
+                <% if (item.stock > 0) { %>
+                <!-- 【課題2-C 穴埋め】ここに在庫の数を出そう。'dummy' を書きかえてね。
+                     ヒント：在庫の数は item.stock -->
+                <span class="badge bg-success">在庫 <%= 'dummy' %> 個</span>
+                <% } else { %>
+                <span class="badge bg-danger">売り切れ</span>
+                <% } %>
+            </p>
+            <% if (showDetail) { %>
+            <a href="/item/<%= item.code %>" class="small text-decoration-none">
+                <i class="bi bi-search me-1"></i>詳細を見る
+            </a>
+            <% } %>
+        </div>
+        <% if (showCart) { %>
+        <!-- カートボタン（行き先 addUrl ＋ 商品番号 にリンク） -->
+        <div class="card-footer bg-transparent border-top p-3 text-center">
+            <% if (item.stock > 0) { %>
+            <!-- 【課題3-A 穴埋め】ボタンの「行き先」を入れよう。1つ目の 'dummy' を addUrl に書きかえてね。
+                 ヒント：カートに入れるURLは addUrl という箱に入っているよ（ページに合った行き先に自動でなる）。 -->
+            <!-- 【課題3-B 穴埋め】どの商品かを伝える「商品番号」を入れよう。2つ目の 'dummy' を item.code に。 -->
+            <!-- 【課題3-C 穴埋め】ボタンの色を決めよう。3つ目の 'dummy' を btn-primary に書きかえてね。
+                 ヒント：btn-primary=青 / btn-success=緑 / btn-danger=赤 / btn-warning=黄。好きな色でOK。 -->
+            <a href="<%= 'dummy' %>/<%= 'dummy' %>" class="btn <%= 'dummy' %> w-100">
+                <i class="bi bi-cart-plus me-1"></i>カートに入れる
+            </a>
+            <% } else { %>
+            <button class="btn btn-secondary w-100" disabled>
+                <i class="bi bi-x-circle me-1"></i>売り切れ
+            </button>
+            <% } %>
+        </div>
+        <% } %>
+    </div>
+</div>
