@@ -1,0 +1,93 @@
+<%- include('partials/header') %>
+
+<!-- ============================================================ -->
+<!--  集計（売上のまとめ）                                          -->
+<!-- ============================================================ -->
+<section class="py-4">
+<div class="container">
+
+    <h2 class="mb-4"><i class="bi bi-bar-chart-line me-2"></i>売上集計</h2>
+
+    <!-- 全体の合計 -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body">
+                    <div class="text-muted">総売上</div>
+                    <div class="display-5 fw-bold text-danger">¥<%= summary.totalRevenue.toLocaleString() %></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body">
+                    <div class="text-muted">会計した回数</div>
+                    <div class="display-5 fw-bold"><%= summary.txnCount.toLocaleString() %> 回</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body">
+                    <div class="text-muted">売れた個数</div>
+                    <div class="display-5 fw-bold"><%= summary.totalQty.toLocaleString() %> 個</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 商品ごとの集計 -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white">
+            <i class="bi bi-list-ol me-2"></i>商品ごとの売上
+        </div>
+        <div class="card-body p-0">
+            <% if (summary.byItem.length === 0) { %>
+            <p class="text-center text-muted p-4 m-0">まだ売上がありません。</p>
+            <% } else { %>
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>商品名</th>
+                        <th class="text-center">売れた個数</th>
+                        <th class="text-end">売上金額</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% summary.byItem.forEach(function(row) { %>
+                    <tr>
+                        <td class="fw-bold"><%= row.name %></td>
+                        <td class="text-center"><span class="badge bg-primary fs-6"><%= row.qty %> 個</span></td>
+                        <td class="text-end fw-bold">¥<%= row.revenue.toLocaleString() %></td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- 売上の履歴（詳細）への入口 -->
+    <div class="mb-4">
+        <a href="/shukei/rireki" class="btn btn-outline-dark">
+            <i class="bi bi-clock-history me-1"></i>売上の履歴（詳細）を見る
+        </a>
+    </div>
+
+    <!-- 集計リセット -->
+    <div class="text-end">
+        <form action="/shukei/reset" method="POST" class="d-inline">
+            <button class="btn btn-outline-danger"
+                    onclick="return confirm('売上の記録をすべて消します。よろしいですか？\n（商品と在庫はそのまま残ります）')">
+                <i class="bi bi-arrow-counterclockwise me-1"></i>集計をリセット
+            </button>
+        </form>
+    </div>
+    <p class="text-muted small text-end mt-2">
+        ※「集計をリセット」は売上の記録だけを消します。本番前にテスト会計を消すときに使ってください。
+    </p>
+
+</div>
+</section>
+
+<%- include('partials/footer') %>
