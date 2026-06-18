@@ -1,4 +1,4 @@
-<%- include('../partials/header') %>
+<%- include('../mikansei/header') %>
 
 <section class="py-4">
 <div class="container mt-4">
@@ -12,7 +12,7 @@
     <div class="alert alert-success small">
         <i class="bi bi-info-circle me-1"></i>
         <strong>ポイント：</strong> 商品カードの中身は共通パーツ
-        <code>views/partials/product_card.ejs</code> に書かれています。画像・商品名・価格・在庫を表示し、
+        <code>views/mikansei/product_card.ejs</code> に書かれています。画像・商品名・価格・在庫を表示し、
         「詳細を見る」を押すと <strong>商品詳細ページ（<code>/item/番号</code>）</strong>が開きます。
         ここを直すと、この Step2 だけでなく <strong>本番ショップ(/shop) のカードも同時に変わります</strong>！
     </div>
@@ -24,7 +24,7 @@
     <% } else { %>
     <div class="row gx-4 gy-4 row-cols-2 row-cols-md-3 row-cols-xl-4">
         <% itemlist.forEach(function(item) { %>
-        <%- include('../partials/product_card', { item: item, showCart: false, addurl: '', showDetail: true }) %>
+        <%- include('../mikansei/product_card', { item: item, showCart: false, addurl: '', showDetail: true }) %>
         <% }) %>
     </div>
     <% } %>
@@ -42,4 +42,4 @@
 </div>
 </section>
 
-<%- include('../partials/footer') %>
+<%- include('../mikansei/footer') %>

@@ -77,7 +77,7 @@ router.post('/buy', (req, res) => {
 // 【完成版の店】購入完了
 router.get('/complete', (req, res) => {
     const order = req.session.lastOrder || { items: [], total: 0 };
-    res.render('system/complete', { order });
+    res.render('mikansei/complete', { order });
 });
 
 // ================================================================

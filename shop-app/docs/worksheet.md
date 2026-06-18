@@ -106,7 +106,7 @@ db.run(`INSERT INTO item (name, price, image, stock, description) VALUES ('_____
 
 ## Step 2 🖼️ カードで並べて、詳細ページを作ろう（穴埋め）
 
-**編集するファイル：`views/partials/product_card.ejs`**（商品カードの共通パーツ）
+**編集するファイル：`views/mikansei/product_card.ejs`**（商品カードの共通パーツ）
 
 URL `http://localhost:3000/step2` は、商品を大きなカードで並べる画面です。
 カードの「画像」「値段」「在庫」を完成させよう。カードの「詳細を見る」を押すと
@@ -150,7 +150,7 @@ URL `http://localhost:3000/step2` は、商品を大きなカードで並べる�
 
 ## Step 3 🛍️ 「カートに入れる」ボタンを完成させよう（穴埋め）
 
-**編集するファイル：`views/partials/product_card.ejs`**（Step2 と同じ共通パーツ）
+**編集するファイル：`views/mikansei/product_card.ejs`**（Step2 と同じ共通パーツ）
 
 URL `http://localhost:3000/step3` には「カートに入れる」ボタンがあります。
 でも今は **行き先も・どの商品か・色も** 決まっていないので、押しても動きません（色もついていません）。
@@ -200,7 +200,7 @@ URL `http://localhost:3000/step3` には「カートに入れる」ボタンが�
 
 ## Step 4 🧮 カートを確認して「買う」（穴埋め＋プログラム）
 
-**編集するファイル：`views/partials/cart_table.ejs`（カート表）、`views/partials/buy_button.ejs`（購入ボタン）、`db/database.js`（お店の頭脳）**
+**編集するファイル：`views/mikansei/cart_table.ejs`（カート表）、`views/mikansei/buy_button.ejs`（購入ボタン）、`db/database.js`（お店の頭脳）**
 
 URL `http://localhost:3000/step4` はカートの中身を確認して購入する画面です。
 「小計（その商品1種類の合計）」を計算して出し、**「購入する」ボタンを完成させ**、
@@ -209,7 +209,7 @@ URL `http://localhost:3000/step4` はカートの中身を確認して購入す�
 > ✨ このカート表のパーツを直すと、本番のお店のカート（`/cart`）も同時に変わります。
 
 ### 課題4-A：小計を計算して出す（画面）
-**ファイル：`views/partials/cart_table.ejs`**
+**ファイル：`views/mikansei/cart_table.ejs`**
 ```html
 <td class="text-end align-middle fw-bold">
     <%= 'dummy' %>円
@@ -218,7 +218,32 @@ URL `http://localhost:3000/step4` はカートの中身を確認して購入す�
 💡ヒント：小計は「数量 × 値段」。`cart.count`（数量）と `cart.price`（値段）をかけ算します。
 `(cart.count * cart.price).toLocaleString()` と書いてみよう。
 
-### 課題4-B：在庫を減らすプログラムを完成させる（本物のプログラム！）
+### 課題4-B：「購入する」ボタンの送信先を入れる（画面）
+**ファイル：`views/mikansei/buy_button.ejs`**
+
+「購入する」ボタンも、今は **送信先が決まっていない** ので押しても買えません。
+`form` の `action` の `'dummy'` を `buyurl` に書きかえよう（クォート `' '` は付けない）。
+```html
+<form action="<%= buyurl %>" method="POST">
+```
+💡ヒント：送信先は `buyurl` という箱に入っています。Step4 では `/purchase`、本番ショップの
+カートでは `/buy` に **自動で切り替わります**。だから皆さんは `buyurl` と書くだけでOK！
+`'dummy'` のままだと、押しても「買えない（404 エラー）」になります。
+
+> ✨ この購入ボタンも共通パーツです。直すと、本番ショップのカート（`/cart`）の
+> 「購入する」ボタンも同時に直ります。
+
+### 課題4-C：「購入する」ボタンの色を決める（画面）
+**ファイル：`views/mikansei/buy_button.ejs`**
+
+ボタンの色のクラス `'dummy'` を、目立つ色に書きかえよう。
+```html
+<button type="submit" class="btn btn-danger btn-lg px-5" ...>
+```
+💡ヒント：`btn-danger`＝赤 / `btn-primary`＝青 / `btn-success`＝緑。
+「買う」ボタンは目立つ色がおすすめです。
+
+### 課題4-D：在庫を減らすプログラムを完成させる（本物のプログラム！）
 **ファイル：`db/database.js`**
 
 ここまでは「画面に何を出すか」を書いてきました。最後は **お店の頭脳** の部分。
@@ -240,36 +265,11 @@ const newStock = item.stock - item.count;
 
 これで「○個買ったから、在庫を○個減らしてね」とデータベースにお願いできます。
 
-### 課題4-C：「購入する」ボタンの送信先を入れる（画面）
-**ファイル：`views/partials/buy_button.ejs`**
-
-「購入する」ボタンも、今は **送信先が決まっていない** ので押しても買えません。
-`form` の `action` の `'dummy'` を `buyurl` に書きかえよう（クォート `' '` は付けない）。
-```html
-<form action="<%= buyurl %>" method="POST">
-```
-💡ヒント：送信先は `buyurl` という箱に入っています。Step4 では `/purchase`、本番ショップの
-カートでは `/buy` に **自動で切り替わります**。だから皆さんは `buyurl` と書くだけでOK！
-`'dummy'` のままだと、押しても「買えない（404 エラー）」になります。
-
-> ✨ この購入ボタンも共通パーツです。直すと、本番ショップのカート（`/cart`）の
-> 「購入する」ボタンも同時に直ります。
-
-### 課題4-D：「購入する」ボタンの色を決める（画面）
-**ファイル：`views/partials/buy_button.ejs`**
-
-ボタンの色のクラス `'dummy'` を、目立つ色に書きかえよう。
-```html
-<button type="submit" class="btn btn-danger btn-lg px-5" ...>
-```
-💡ヒント：`btn-danger`＝赤 / `btn-primary`＝青 / `btn-success`＝緑。
-「買う」ボタンは目立つ色がおすすめです。
-
 ### ✅ 確認
 - カートに商品を入れて、小計と合計が正しく出ればOK！（合計は先生が計算してくれています）
-- 課題4-C を直すと「購入する」ボタンが効くようになり、色（4-D）もつきます。
-- 課題4-B を **直す前** は、「購入する」を押しても **在庫が減りません**（ずっと10個のまま）。
-- 課題4-B を **直したあと** は、「購入する」を押すと Step2 のカードで **在庫の数が減ります**（10個 → 9個 など）。
+- 課題4-B を直すと「購入する」ボタンが効くようになり、色（4-C）もつきます。
+- 課題4-D を **直す前** は、「購入する」を押しても **在庫が減りません**（ずっと10個のまま）。
+- 課題4-D を **直したあと** は、「購入する」を押すと Step2 のカードで **在庫の数が減ります**（10個 → 9個 など）。
   自分が書いた計算で、お店の在庫が本当に動く！ これが「データベースでお店の状態を管理する」仕組み。本物の通販サイトと同じです！
 
 > ⚠️ `db/database.js` を直したら、**`run.bat` をいったん閉じて開き直す**と確実に反映されます。
@@ -279,22 +279,22 @@ const newStock = item.stock - item.count;
 ---
 
 ## Step 5 📦 「購入完了」の画面を作ろう
+**ファイル：`views/mikansei/complete.ejs`**
 
 URL `http://localhost:3000/step5`（Step4 で購入すると自動でここに来ます）。
 
 買った商品の明細と「ご購入ありがとうございました」が表示されます。
-明細の表は共通パーツ `views/partials/order_table.ejs` です。本番の `/complete` と同じものを使っています。
+明細の表は共通パーツ `views/mikansei/order_table.ejs` です。本番の `/complete` と同じものを使っています。
 
 - 「購入完了」のメッセージが出る
 - 買った商品・数量・小計・合計が表に出る
 
-> 📸 （ここに購入完了画面のスクショ）
 
 ---
 
 ## ⭐ おかわり課題 — 商品詳細ページを完成させよう（時間が余ったら）
 
-**編集するファイル：`views/partials/item_detail.ejs`**（商品詳細の共通パーツ）
+**編集するファイル：`views/mikansei/item_detail.ejs`**（商品詳細の共通パーツ）
 
 カードの「詳細を見る」を押すと開く **商品詳細ページ（`/item/番号`）** にも、
 じつは Step2・Step3 と同じ穴埋め（`'dummy'`）が **6か所** 残してあります。
@@ -360,7 +360,7 @@ URL `http://localhost:3000/step5`（Step4 で購入すると自動でここに�
 ```
 この `翔陽ストア` と キャッチコピーを、自分のお店の名前に変えよう。
 
-**ファイル：`views/partials/header.ejs`**（画面の上のバー）
+**ファイル：`views/mikansei/header.ejs`**（画面の上のバー）
 ```html
 <a class="navbar-brand" href="/">🛒 翔陽ストア</a>
 ```
@@ -374,6 +374,48 @@ Step 1 でやったように `db/seed.js` を編集して、
 同じネットワークなら、友達のサイトを操作したり、
 自分のサイトを友達に買い物してもらったりできます（先生の指示に従ってね）。
 
+### 発展D：ナビ（上のバー）の色を変えよう
+**ファイル：`views/mikansei/header.ejs`**（画面の上のバー）
+
+お店のいちばん上にある黒いバー（ナビ）の **背景の色** と **文字の色** を、
+自分好みの色に変えてみよう。色は **クラス名** を書きかえるだけで変わります（CSSは書かなくてOK）。
+
+今はこうなっています👇
+```html
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+```
+
+- **背景の色** … `bg-dark` の部分を `bg-○○` に変える。
+- **文字の色** … `navbar-dark`（白っぽい字）か `navbar-light`（黒っぽい字）で切りかえる。
+  背景が明るい色のときは `navbar-light` にすると文字が見えやすいよ。
+
+たとえば「黄色の背景＋黒い文字」にするなら👇
+```html
+<nav class="navbar navbar-expand-lg navbar-light bg-warning">
+```
+
+💡 使える色クラス（背景は `bg-○○`、文字は各リンクの `text-○○`）：
+
+| 色クラス（○○の部分） | だいたいの色 |
+|------|------|
+| `primary` | 青 |
+| `secondary` | 灰 |
+| `success` | 緑 |
+| `danger` | 赤 |
+| `warning` | 黄 |
+| `info` | 水色 |
+| `light` | 白に近い薄灰 |
+| `dark` | 黒に近い濃灰 |
+
+文字を1つずつ派手な色にしたいときは、メニューのリンクに `text-○○` を足してもOK👇
+```html
+<a class="nav-link text-danger" href="/">🏠 Home</a>
+```
+
+> 💡 もっと奇抜な色（蛍光ピンクなど）にしたい人は、`public/css/styles.css` の
+> いちばん下に `.navbar { background-color: #ff00cc !important; }` のように
+> 自分で色を書く方法もあるよ（先生に聞いてみよう）。
+
 > 📸 （ここに自分のお店のスクショ）
 
 ---
@@ -385,11 +427,11 @@ Step 1 でやったように `db/seed.js` を編集して、
 - [ ] Step2：カードに画像・値段・在庫を出し、詳細ページを開けた
 - [ ] Step3：カートに入れるボタンを完成させた（行き先・商品番号・色）
 - [ ] Step4-A：小計を出した
-- [ ] Step4-C / 4-D：購入するボタンの送信先と色を入れて、購入できた
-- [ ] Step4-B：在庫を減らすプログラムを書いて、在庫が減るのを確認した
+- [ ] Step4-B / 4-C：購入するボタンの送信先と色を入れて、購入できた
+- [ ] Step4-D：在庫を減らすプログラムを書いて、在庫が減るのを確認した
 - [ ] Step5：購入完了画面が表示された
 - [ ] おかわり：商品詳細ページ（D-A〜D-F）を完成させた
-- [ ] 発展：トップページを自分のお店にした
+- [ ] 発展：トップページを自分のお店にした（ナビの色も変えた）
 
 ---
 

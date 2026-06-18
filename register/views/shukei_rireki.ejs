@@ -17,15 +17,18 @@
     <p class="text-center text-muted p-4">まだ売上がありません。</p>
     <% } else { %>
         <% history.forEach(function(sale) {
-            // created_at は ISO 文字列。時:分:秒 で表示する。
-            var d  = new Date(sale.created_at);
-            var hh = String(d.getHours()).padStart(2, '0');
-            var mm = String(d.getMinutes()).padStart(2, '0');
-            var ss = String(d.getSeconds()).padStart(2, '0');
+            // created_at は ISO 文字列。年月日 時:分:秒 で表示する。
+            var d     = new Date(sale.created_at);
+            var year  = d.getFullYear();
+            var month = String(d.getMonth() + 1).padStart(2, '0');
+            var day   = String(d.getDate()).padStart(2, '0');
+            var hh    = String(d.getHours()).padStart(2, '0');
+            var mm    = String(d.getMinutes()).padStart(2, '0');
+            var ss    = String(d.getSeconds()).padStart(2, '0');
         %>
         <div class="card shadow-sm mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-clock me-1"></i><%= hh %>:<%= mm %>:<%= ss %></span>
+                <span><i class="bi bi-clock me-1"></i><%= year %>/<%= month %>/<%= day %> <%= hh %>:<%= mm %>:<%= ss %></span>
                 <span class="fw-bold">合計 ¥<%= sale.total.toLocaleString() %></span>
             </div>
             <div class="card-body p-0">

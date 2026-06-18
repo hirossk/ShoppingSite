@@ -26,60 +26,10 @@
     <div class="alert alert-<%= m[0] %>"><%= m[1] %></div>
     <% } %>
 
-    <!-- レジの設定（ボタンのカスタマイズ） -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-secondary text-white">
-            <i class="bi bi-sliders me-2"></i>レジのボタン設定
-        </div>
-        <div class="card-body">
-            <form action="/kanri/settings" method="POST">
-                <div class="row g-3 align-items-end">
-                    <div class="col-md-2 col-6">
-                        <label class="form-label small mb-0">クイック入金①</label>
-                        <input type="number" name="quick1" class="form-control" value="<%= settings.quick1 %>" min="1" step="1" required>
-                    </div>
-                    <div class="col-md-2 col-6">
-                        <label class="form-label small mb-0">クイック入金②</label>
-                        <input type="number" name="quick2" class="form-control" value="<%= settings.quick2 %>" min="1" step="1" required>
-                    </div>
-                    <div class="col-md-2 col-6">
-                        <label class="form-label small mb-0">クイック入金③</label>
-                        <input type="number" name="quick3" class="form-control" value="<%= settings.quick3 %>" min="1" step="1" required>
-                    </div>
-                    <div class="col-md-2 col-6">
-                        <label class="form-label small mb-0">1行に並べる数</label>
-                        <select name="cols" class="form-select">
-                            <% [2,3,4,5,6].forEach(function(n){ %>
-                            <option value="<%= n %>" <%= settings.cols === n ? 'selected' : '' %>><%= n %> 個</option>
-                            <% }) %>
-                        </select>
-                    </div>
-                    <div class="col-md-2 col-6">
-                        <label class="form-label small mb-0">ボタンの大きさ</label>
-                        <select name="btn_height" class="form-select">
-                            <% [['小',90],['中',120],['大',150],['特大',190]].forEach(function(o){ %>
-                            <option value="<%= o[1] %>" <%= settings.btn_height === o[1] ? 'selected' : '' %>><%= o[0] %>（<%= o[1] %>px）</option>
-                            <% }) %>
-                        </select>
-                    </div>
-                    <div class="col-md-2 col-12">
-                        <button type="submit" class="btn btn-secondary w-100">
-                            <i class="bi bi-check-lg me-1"></i>設定を保存
-                        </button>
-                    </div>
-                </div>
-                <div class="form-text mt-2">
-                    クイック入金は、レジの「お預かり」を一発で足すボタン（「ちょうど」の隣の3つ）の金額です。
-                    商品ボタンの並び順は、下の一覧の <i class="bi bi-arrow-up"></i>/<i class="bi bi-arrow-down"></i> で変えられます。
-                </div>
-            </form>
-        </div>
-    </div>
-
     <!-- 新規登録フォーム -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-primary text-white">
-            <i class="bi bi-plus-circle me-2"></i>新しい商品を登録
+            <i class="bi bi-pencil-square me-2"></i>新しい商品を登録
         </div>
         <div class="card-body">
             <form action="/kanri/add" method="POST">
@@ -136,7 +86,7 @@
     </div>
 
     <!-- 登録済みの商品 -->
-    <div class="card shadow-sm">
+    <div class="card shadow-sm mb-4">
         <div class="card-header bg-dark text-white">
             <i class="bi bi-box-seam me-2"></i>登録済みの商品（<%= items.length %> 件）
         </div>
@@ -285,6 +235,56 @@
                 </tbody>
             </table>
             <% } %>
+        </div>
+    </div>
+
+    <!-- レジの設定（ボタンのカスタマイズ） -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">
+            <i class="bi bi-sliders me-2"></i>レジのボタン設定
+        </div>
+        <div class="card-body">
+            <form action="/kanri/settings" method="POST">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-2 col-6">
+                        <label class="form-label small mb-0">クイック入金①</label>
+                        <input type="number" name="quick1" class="form-control" value="<%= settings.quick1 %>" min="1" step="1" required>
+                    </div>
+                    <div class="col-md-2 col-6">
+                        <label class="form-label small mb-0">クイック入金②</label>
+                        <input type="number" name="quick2" class="form-control" value="<%= settings.quick2 %>" min="1" step="1" required>
+                    </div>
+                    <div class="col-md-2 col-6">
+                        <label class="form-label small mb-0">クイック入金③</label>
+                        <input type="number" name="quick3" class="form-control" value="<%= settings.quick3 %>" min="1" step="1" required>
+                    </div>
+                    <div class="col-md-2 col-6">
+                        <label class="form-label small mb-0">1行に並べる数</label>
+                        <select name="cols" class="form-select">
+                            <% [2,3,4,5,6].forEach(function(n){ %>
+                            <option value="<%= n %>" <%= settings.cols === n ? 'selected' : '' %>><%= n %> 個</option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="col-md-2 col-6">
+                        <label class="form-label small mb-0">ボタンの大きさ</label>
+                        <select name="btn_height" class="form-select">
+                            <% [['小',90],['中',120],['大',150],['特大',190]].forEach(function(o){ %>
+                            <option value="<%= o[1] %>" <%= settings.btn_height === o[1] ? 'selected' : '' %>><%= o[0] %>（<%= o[1] %>px）</option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="col-md-2 col-12">
+                        <button type="submit" class="btn btn-secondary w-100">
+                            <i class="bi bi-check-lg me-1"></i>設定を保存
+                        </button>
+                    </div>
+                </div>
+                <div class="form-text mt-2">
+                    クイック入金は、レジの「お預かり」を一発で足すボタン（「ちょうど」の隣の3つ）の金額です。
+                    商品ボタンの並び順は、下の一覧の <i class="bi bi-arrow-up"></i>/<i class="bi bi-arrow-down"></i> で変えられます。
+                </div>
+            </form>
         </div>
     </div>
 

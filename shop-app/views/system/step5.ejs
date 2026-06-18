@@ -1,4 +1,4 @@
-<%- include('../partials/header') %>
+<%- include('../mikansei/header') %>
 
 <section class="py-4">
 <div class="container mt-4">
@@ -12,7 +12,7 @@
     <div class="alert alert-dark small">
         <i class="bi bi-info-circle me-1"></i>
         <strong>ポイント：</strong> 購入明細は共通パーツ
-        <code>views/partials/order_table.ejs</code> に書かれています。ここを直すと
+        <code>views/mikansei/order_table.ejs</code> に書かれています。ここを直すと
         <strong>本番ショップの購入完了(/complete) も同時に変わります</strong>。
         買った分だけ在庫が減ったかは、<a href="/step2">Step 2</a> のカードの「在庫◯個」で確認できます。
     </div>
@@ -28,7 +28,7 @@
     </div>
 
     <!-- 購入明細（共通パーツ：本番 /complete と同じものを使用） -->
-    <%- include('../partials/order_table', { order: order }) %>
+    <%- include('../mikansei/order_table', { order: order }) %>
     <% } else { %>
     <div class="alert alert-secondary">
         <i class="bi bi-info-circle me-1"></i>
@@ -52,4 +52,4 @@
 </div>
 </section>
 
-<%- include('../partials/footer') %>
+<%- include('../mikansei/footer') %>

@@ -1,4 +1,4 @@
-<%- include('partials/header') %>
+<%- include('mikansei/header') %>
 
 <!-- ============================================================ -->
 <!--  お店の表紙（トップページ）                                  -->
@@ -30,7 +30,7 @@
         <% } else { %>
         <div class="row gx-4 gy-4 row-cols-2 row-cols-md-3 row-cols-xl-4">
             <% featured.forEach(function(item) { %>
-            <%- include('partials/product_card', { item: item, showCart: false, addurl: '', showDetail: true }) %>
+            <%- include('mikansei/product_card', { item: item, showCart: false, addurl: '', showDetail: true }) %>
             <% }) %>
         </div>
 
@@ -54,4 +54,4 @@
     </div>
 </section>
 
-<%- include('partials/footer') %>
+<%- include('mikansei/footer') %>

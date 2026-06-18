@@ -1,4 +1,4 @@
-<%- include('../partials/header') %>
+<%- include('../mikansei/header') %>
 
 <!-- ============================================================ -->
 <!--  商品詳細ページ — 完成版のお店                              -->
@@ -18,10 +18,10 @@
         その商品は見つかりませんでした。<a href="/shop">商品一覧</a>から選びなおしてください。
     </div>
     <% } else { %>
-    <%- include('../partials/item_detail', { item: item, addurl: addurl }) %>
+    <%- include('../mikansei/item_detail', { item: item, addurl: addurl }) %>
     <% } %>
 
 </div>
 </section>
 
-<%- include('../partials/footer') %>
+<%- include('../mikansei/footer') %>

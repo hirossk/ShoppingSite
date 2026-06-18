@@ -1,4 +1,4 @@
-<%- include('../partials/header') %>
+<%- include('../mikansei/header') %>
 
 <section class="py-4">
 <div class="container mt-4">
@@ -12,7 +12,7 @@
     <div class="alert alert-warning small">
         <i class="bi bi-info-circle me-1"></i>
         <strong>ポイント：</strong> Step2 と同じ共通パーツ
-        <code>views/partials/product_card.ejs</code> を、今度は「カートに入れる」ボタン付き
+        <code>views/mikansei/product_card.ejs</code> を、今度は「カートに入れる」ボタン付き
         （<code>showCart: true</code>）で表示しています。ボタンを押すと <code>/cart/add/番号</code>
         にアクセスして、データベースの <code>cart</code> テーブルに商品が入り、カート画面（Step4）に進みます。
     </div>
@@ -24,7 +24,7 @@
     <% } else { %>
     <div class="row gx-4 gy-4 row-cols-2 row-cols-md-3 row-cols-xl-4">
         <% itemlist.forEach(function(item) { %>
-        <%- include('../partials/product_card', { item: item, showCart: true, addurl: '/cart/add', showDetail: true }) %>
+        <%- include('../mikansei/product_card', { item: item, showCart: true, addurl: '/cart/add', showDetail: true }) %>
         <% }) %>
     </div>
     <% } %>
@@ -42,4 +42,4 @@
 </div>
 </section>
 
-<%- include('../partials/footer') %>
+<%- include('../mikansei/footer') %>

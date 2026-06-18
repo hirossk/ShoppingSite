@@ -1,4 +1,4 @@
-<%- include('../partials/header') %>
+<%- include('../mikansei/header') %>
 
 <section class="py-4">
 <div class="container mt-4">
@@ -12,7 +12,7 @@
     <div class="alert alert-danger small">
         <i class="bi bi-info-circle me-1"></i>
         <strong>ポイント：</strong> カートの表は共通パーツ
-        <code>views/partials/cart_table.ejs</code> に書かれています（小計 ＝ 数量 × 価格 もここ）。
+        <code>views/mikansei/cart_table.ejs</code> に書かれています（小計 ＝ 数量 × 価格 もここ）。
         ここを直すと <strong>本番ショップのカート(/cart) も同時に変わります</strong>。
         「購入する」ボタンで <code>POST /purchase</code> を呼び出すと、買った分だけ
         <strong>商品の在庫（stock）が減って</strong>、購入完了（Step5）に進みます。
@@ -41,10 +41,10 @@
     <% } else { %>
 
     <!-- カート内容テーブル（共通パーツ：本番 /cart と同じものを使用） -->
-    <%- include('../partials/cart_table', { cartlist: cartlist, total: total, removeurl: '/cart/del' }) %>
+    <%- include('../mikansei/cart_table', { cartlist: cartlist, total: total, removeurl: '/cart/del' }) %>
 
     <!-- 購入ボタン（共通パーツ：本番 /cart と同じものを使用） -->
-    <%- include('../partials/buy_button', { buyurl: '/purchase', total: total }) %>
+    <%- include('../mikansei/buy_button', { buyurl: '/purchase', total: total }) %>
     <div class="text-center mt-2">
         <a href="/step3" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left me-1"></i>買い物を続ける（Step 3）
@@ -66,4 +66,4 @@
 </div>
 </section>
 
-<%- include('../partials/footer') %>
+<%- include('../mikansei/footer') %>

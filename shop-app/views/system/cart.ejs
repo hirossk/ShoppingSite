@@ -1,4 +1,4 @@
-<%- include('../partials/header') %>
+<%- include('../mikansei/header') %>
 
 <!-- ============================================================ -->
 <!--  カート確認・購入 — 完成版のお店                            -->
@@ -30,10 +30,10 @@
     <% } else { %>
 
     <!-- カート内容テーブル（共通パーツ：Step5 と同じものを使用） -->
-    <%- include('../partials/cart_table', { cartlist: cartlist, total: total, removeurl: '/cart/remove' }) %>
+    <%- include('../mikansei/cart_table', { cartlist: cartlist, total: total, removeurl: '/cart/remove' }) %>
 
     <!-- 購入ボタン（共通パーツ：Step4 と同じものを使用） -->
-    <%- include('../partials/buy_button', { buyurl: '/buy', total: total }) %>
+    <%- include('../mikansei/buy_button', { buyurl: '/buy', total: total }) %>
     <div class="text-center mt-2">
         <a href="/shop" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left me-1"></i>買い物を続ける
@@ -45,4 +45,4 @@
 </div>
 </section>
 
-<%- include('../partials/footer') %>
+<%- include('../mikansei/footer') %>

@@ -1,4 +1,4 @@
-<%- include('../partials/header') %>
+<%- include('./header') %>
 
 <!-- ============================================================ -->
 <!--  購入完了 — 完成版のお店                                    -->
@@ -10,14 +10,14 @@
     <!-- 購入完了メッセージ -->
     <div class="card border-success shadow mb-4">
         <div class="card-body text-center py-4">
-            <div class="display-1 mb-2">🎉</div>
-            <h3 class="text-success fw-bold">ご購入ありがとうございました！</h3>
-            <p class="text-muted">ご注文を承りました。</p>
+            <div class="display-1 mb-4">！</div>
+            <h3 class="text-success fw-bold">！</h3>
+            <p class="text-muted"></p>
         </div>
     </div>
 
     <!-- 購入明細（共通パーツ：Step5 と同じものを使用） -->
-    <%- include('../partials/order_table', { order: order }) %>
+    <%- include('./order_table', { order: order }) %>
     <% } else { %>
     <div class="alert alert-secondary">
         <i class="bi bi-info-circle me-1"></i>
@@ -38,4 +38,4 @@
 </div>
 </section>
 
-<%- include('../partials/footer') %>
+<%- include('./footer') %>
